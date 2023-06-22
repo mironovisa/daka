@@ -2,8 +2,8 @@ import React from 'react'
 import { View, Text, TouchableOpacity, FlatList } from "react-native"
 import { Product } from '../../models'
 import styles from './styles'
-import FavoriteProductsItem from '../../components/FavoriteProductsItem'
-import FilteringTabs from '../../components/FilteringTabs'
+import FavoriteProductsItem from '../FavoriteProductsItem'
+import FilteringTabs from '../FilteringTabs'
 
 type MainProductsProps = {
   mainProducts: Product[];

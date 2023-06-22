@@ -16,3 +16,13 @@ export declare class Product{
     readonly isPaid: boolean;
 
 }
+export declare class Category{
+    readonly id: string;
+    readonly name: string;
+    readonly src: any;
+}
+
+export declare class Filtering{
+    readonly id: string;
+    readonly name: string;
+}
