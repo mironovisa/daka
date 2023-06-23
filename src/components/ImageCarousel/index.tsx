@@ -27,23 +27,31 @@ function index({ images }: { images: string[] }) {
       onViewableItemsChanged={onViewRef.current}
         />
             <View style={styles.dotsView}>{images.map((image, index) => (
-                <View style={styles.dot} key={index}></View>
+                <View style={[styles.dot, {backgroundColor: index===activeIndex?"black":"gray"}]} key={index}></View>
             ))}</View></View>
     
   );
 }
 
 const styles = StyleSheet.create({
-    dot: {width: 10, height: 10, borderRadius: 5, backgroundColor: "red"
-    },
-    dotsView: {
-        flexDirection: "row",
-        position: "absolute",
-        right: 10,
-        bottom: 10,
-        alignItems: "center",
-        borderRadius: 10,
-    backgroundColor: "red"},
-})
+  dot:
+  {
+    width: 7,
+    height: 7,
+    borderRadius: 5,
+    backgroundColor: "white",
+   
+    marginVertical: 6,
+  marginHorizontal: 8},
+  dotsView: {
+    flexDirection: "row",
+    position: "absolute",
+    bottom: 5,
+    left: "45%",
+    alignItems: "center",
+    borderRadius: 10,
+    backgroundColor: "rgba(0,0,0,0,5)",
+  },
+});
 
 export default index;
