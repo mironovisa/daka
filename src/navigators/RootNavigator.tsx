@@ -1,6 +1,6 @@
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import {View, Text} from "react-native"
+import {View, Text, Platform} from "react-native"
 import HomeNavigator from './HomeNavigator';
 import { Foundation, Ionicons, Entypo, MaterialCommunityIcons } from "@expo/vector-icons"
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -9,6 +9,8 @@ import PostNavigator from './PostNavigator';
 
 const Tab = createBottomTabNavigator();
 function RootNavigator() {
+  const tabBarSize = Platform.OS === 'android' ? 60 : 80;
+  const defaultTabBarHeight = 60; 
 
   return (
       <Tab.Navigator
@@ -20,7 +22,7 @@ function RootNavigator() {
               tabBarInactiveTintColor: "#3B2F2F", 
               headerShown: false,
               tabBarStyle: {
-                  height: 80,
+                height: tabBarSize || defaultTabBarHeight,
               }
           }}>
 <Tab.Screen
@@ -28,7 +30,7 @@ function RootNavigator() {
   component={HomeNavigator}
   options={{
     tabBarIcon: ({ color }) => (
-      <Foundation name="home" size={24} color={color} />
+      <Foundation name="home" size={20} color={color} />
     ),
   }}
           />
@@ -37,7 +39,7 @@ function RootNavigator() {
   component={PostNavigator}
   options={{
     tabBarIcon: ({ color }) => (
-          <Ionicons name="md-heart" size={24} color={color} />
+          <Ionicons name="md-heart" size={20} color={color} />
     ),
   }}
 />
@@ -46,7 +48,7 @@ function RootNavigator() {
   component={HomeNavigator}
   options={{
       tabBarIcon: ({ color }) => (
-        <MaterialIcons name="add-circle-outline" size={24} color={color} />
+        <MaterialIcons name="add-circle-outline" size={20} color={color} />
       ),
   }}
 />
@@ -55,7 +57,7 @@ function RootNavigator() {
   component={HomeNavigator}
   options={{
       tabBarIcon: ({ color }) => (
-          <View><Ionicons name="chatbox" size={24} color={color} />
+          <View><Ionicons name="chatbox" size={20} color={color} />
           <View style={{position: "absolute", top: -4, right: -10, width: 16, height: 16, borderRadius: 8, backgroundColor: "#F24E61", flexDirection: "row", alignItems: "center" }}><Text style={{fontSize: 10, color: "white", position: 'relative', left: 5}}>2</Text></View></View>
         
     ),
@@ -66,7 +68,7 @@ function RootNavigator() {
   component={HomeNavigator}
   options={{
     tabBarIcon: ({ color }) => (
-        <MaterialCommunityIcons name="account" size={24} color={color} />
+        <MaterialCommunityIcons name="account" size={20} color={color} />
     ),
   }}
 />

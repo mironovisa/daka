@@ -4,22 +4,24 @@ import { View, TouchableOpacity, Text, Image } from 'react-native'
 import styles from './styles'
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+
 type productProps = {
     product: Product
 }
 const index = ({ product }: productProps) => {
     const [like, setLike] = useState(false);
+    const navigation = useNavigation();
     const handleLike = () => {
         setLike(!like);
     }
 
     const cityText = product.city.length > 8 ? `${product.city.slice(0, 7)}...` : product.city;
   return (
-<TouchableOpacity style={styles.favorite}>
+<TouchableOpacity style={styles.favorite} onPress={()=>navigation.navigate("ProductDetails", {product:product})}>
 <View style={[styles.favoriteView, product.isPaid ? { backgroundColor: "#efdfbb" } : null]}>
 
               <Image source={{ uri: product.image }} resizeMode='stretch' style={styles.favoriteImage} />
-             
               <View>
                   <Text style={styles.productName} numberOfLines={2} ellipsizeMode='tail'>{product.name}</Text>
                   </View>

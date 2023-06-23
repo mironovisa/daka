@@ -1,52 +1,35 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import HomeScreen from "../screens/HomeScreen";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { TouchableOpacity } from 'react-native';
-import { TextInput, Text, View } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons'; 
-import { Ionicons } from '@expo/vector-icons'; 
-import CategoryFilterScreen from "../screens/CategoryFilterScreen";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import HomeScreen from '../screens/HomeScreen';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { TouchableOpacity, Dimensions } from 'react-native';
+import { TextInput, Text, View, TouchableWithoutFeedback } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+import CategoryFilterScreen from '../screens/CategoryFilterScreen';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import ProducDetailsScreen from '../screens/ProductDetailsScreen';
+import { Feather } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
+import { EvilIcons } from '@expo/vector-icons';
 
 const Stack = createStackNavigator();
+const { height, width } = Dimensions.get('window');
 
-const MainHeaderComponent = ({ isMainPage = true }) => {
-  const navigation = useNavigation();
-
-  const handlePress = () => {
-    navigation.navigate('Home');
-  };
-
+const MainHeaderComponent = ({ isMainPage = true, handlePress }) => {
   return (
     <SafeAreaView
       style={{
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
         marginBottom: 4,
-        justifyContent: "center",
-        backgroundColor: "white"
+        justifyContent: 'center',
+        backgroundColor: 'white',
+        height: height * 0.12, // Adjust the height here
       }}
       edges={['top', 'left', 'right']}
     >
-      {!isMainPage && (
-        <TouchableOpacity
-          style={{
-            backgroundColor: "#e5e5e5",
-            height: 46,
-            justifyContent: "center",
-            alignContent: "center",
-            alignItems: "center",
-            paddingLeft: 5,
-            paddingRight: 5
-          }}
-          onPress={handlePress}
-        >
-          <Ionicons name="arrow-back" size={24} color="#424242" />
-        </TouchableOpacity>
-      )}
-        
       <View
         style={{
           flex: 1,
@@ -56,6 +39,22 @@ const MainHeaderComponent = ({ isMainPage = true }) => {
           backgroundColor: '#e5e5e5',
         }}
       >
+        {!isMainPage && (
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#e5e5e5',
+              justifyContent: 'center',
+              alignContent: 'center',
+              alignItems: 'center',
+              paddingLeft: 5,
+              paddingRight: 5,
+            }}
+            onPress={handlePress}
+          >
+            <Ionicons name="arrow-back" size={24} color="darkgrey" />
+          </TouchableOpacity>
+        )}
+
         <Ionicons name="search" size={24} color="darkgrey" style={{ padding: 10 }} />
         <TextInput
           placeholder="Search..."
@@ -70,20 +69,68 @@ const MainHeaderComponent = ({ isMainPage = true }) => {
           }}
           returnKeyType="search"
         />
+        <TouchableOpacity
+          style={{
+            backgroundColor: '#e5e5e5',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 10,
+          }}
+        >
+          <MaterialIcons name="settings-applications" size={28} color="#97B858" />
+        </TouchableOpacity>
       </View>
-
-      <TouchableOpacity style={{ backgroundColor: "#e5e5e5", height: 46, alignItems: "center", justifyContent: "center" }}>
-        <MaterialIcons name="settings-applications" size={36} color="#97B858" />
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };
 
 function HomeNavigator() {
+  const navigation = useNavigation();
+
+  const handlePress = () => {
+    navigation.goBack();
+  };
+
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={HomeScreen} options={{ header: () => (<MainHeaderComponent />) }} />
-      <Stack.Screen name="CategoryFiltering" component={CategoryFilterScreen} options={{ header: () => (<MainHeaderComponent isMainPage={false} />) }} />
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ header: () => <MainHeaderComponent handlePress={handlePress} /> }}
+      />
+      <Stack.Screen
+        name="ProductDetails"
+        component={ProducDetailsScreen}
+        options={({ route }) => ({
+          title: '',
+          headerRight: () => (
+            <View style={{ flexDirection: 'row', marginRight: 15 }}>
+              <View>
+                <TouchableOpacity>
+                  <Feather name="heart" size={21} color="black" style={{ marginRight: 15 }} />
+                </TouchableOpacity>
+              </View>
+              <View>
+                <TouchableOpacity>
+                  <EvilIcons name="share-google" size={26} color="black" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          ),
+          headerLeft: () => (
+            <View style={{ marginLeft: 10 }}>
+              <TouchableOpacity onPress={handlePress}>
+                <Ionicons name="arrow-back" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="CategoryFiltering"
+        component={CategoryFilterScreen}
+        options={{ header: () => <MainHeaderComponent isMainPage={false} handlePress={handlePress} /> }}
+      />
     </Stack.Navigator>
   );
 }

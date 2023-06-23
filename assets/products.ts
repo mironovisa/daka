@@ -3,7 +3,7 @@ export default [
     id: '5',
     image: "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/products/cleanarchitecture.jpg",
     images: [
-      "https://i.ebayimg.com/images/g/sY8AAOSw9~RXJA-f/s-l1600.jpg",
+      "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/products/cleanarchitecture.jpg",
       "https://m.media-amazon.com/images/I/51x2uufH6SL.jpg",
       "https://m.media-amazon.com/images/I/51x2uufH6SL.jpg"
     ],
@@ -24,7 +24,7 @@ export default [
     id: '6',
     image: "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/products/cleancode.jpg",
     images: [
-      "https://i.ebayimg.com/images/g/sY8AAOSw9~RXJA-f/s-l1600.jpg",
+      "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/products/cleancode.jpg",
       "https://m.media-amazon.com/images/I/51x2uufH6SL.jpg",
       "https://m.media-amazon.com/images/I/51x2uufH6SL.jpg"
     ],
@@ -45,7 +45,7 @@ export default [
     id: '7',
     image: "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/products/imac1.jpg",
     images: [
-      "https://i.ebayimg.com/images/g/sY8AAOSw9~RXJA-f/s-l1600.jpg",
+      "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/products/imac1.jpg",
       "https://m.media-amazon.com/images/I/51x2uufH6SL.jpg",
       "https://m.media-amazon.com/images/I/51x2uufH6SL.jpg"
     ],
@@ -66,7 +66,7 @@ export default [
     id: '8',
     image: "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/products/keyboard1.jpg",
     images: [
-      "https://i.ebayimg.com/images/g/sY8AAOSw9~RXJA-f/s-l1600.jpg",
+      "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/products/keyboard1.jpg",
       "https://m.media-amazon.com/images/I/51x2uufH6SL.jpg",
       "https://m.media-amazon.com/images/I/51x2uufH6SL.jpg"
     ],
@@ -87,7 +87,7 @@ export default [
     id: '9',
     image: "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/products/keyboard2.jpg",
     images: [
-      "https://i.ebayimg.com/images/g/sY8AAOSw9~RXJA-f/s-l1600.jpg",
+      "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/products/keyboard1.jpg",
       "https://m.media-amazon.com/images/I/51x2uufH6SL.jpg",
       "https://m.media-amazon.com/images/I/51x2uufH6SL.jpg"
     ],
