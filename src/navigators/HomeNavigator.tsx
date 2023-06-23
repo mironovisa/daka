@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, StackHeaderHidden } from '@react-navigation/stack';
 import HomeScreen from '../screens/HomeScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TouchableOpacity, Dimensions } from 'react-native';
@@ -8,7 +8,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import CategoryFilterScreen from '../screens/CategoryFilterScreen';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { getFocusedRouteNameFromRoute, useNavigation } from '@react-navigation/native';
 import ProducDetailsScreen from '../screens/ProductDetailsScreen';
 import { Feather } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
@@ -17,7 +17,12 @@ import { EvilIcons } from '@expo/vector-icons';
 const Stack = createStackNavigator();
 const { height, width } = Dimensions.get('window');
 
-const MainHeaderComponent = ({ isMainPage = true, handlePress }) => {
+const MainHeaderComponent = ({ isMainPage = true }) => {
+  const navigation = useNavigation();
+  const handlePress = () => {
+    navigation.goBack();
+  };
+
   return (
     <SafeAreaView
       style={{
@@ -84,8 +89,18 @@ const MainHeaderComponent = ({ isMainPage = true, handlePress }) => {
   );
 };
 
-function HomeNavigator() {
-  const navigation = useNavigation();
+function MyStack({ navigation, route }) {
+  const tabHiddenRoutes = ["ProductDetails"]
+  
+  React.useLayoutEffect(() => {
+    const routeName = getFocusedRouteNameFromRoute(route);
+    if (tabHiddenRoutes.includes(routeName)) {
+      navigation.setOptions({tabBarStyle: {display: "none"}})
+    } else {
+      navigation.setOptions({tabBarStyle:{display: "true"}})
+    }
+  }, [navigation, route])
+
 
   const handlePress = () => {
     navigation.goBack();
@@ -135,4 +150,7 @@ function HomeNavigator() {
   );
 }
 
-export default HomeNavigator;
+export default function HomeNavigator({ navigation, route })
+{
+  return <MyStack navigation={navigation} route={route}/>
+}

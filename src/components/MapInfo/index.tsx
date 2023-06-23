@@ -14,8 +14,8 @@ function index() {
     longitudeDelta: 0.0421,
           }}
           />
-          <View>
-              <Text style={{paddingHorizontal:16}}>Ashkelon, Yafe Nof, 4</Text>
+          <View style={{height: height*0.04, borderBottomLeftRadius: 12, marginTop: -height*0.04,  borderBottomRightRadius: 12, backgroundColor:"white"}}>
+              <Text style={{ paddingLeft: 16, paddingVertical: 8, fontSize: 16, }}>Ashkelon, Yafe Nof, 4</Text>
           </View>
   </View>
   )

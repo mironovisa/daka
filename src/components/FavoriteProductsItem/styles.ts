@@ -3,7 +3,7 @@ import { Dimensions, StyleSheet, Platform } from "react-native";
 const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
-    favorite: {
+  favorite: {
     marginTop: 10,
       marginLeft: 3,
       justifyContent: "center",
@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
       android: {
         elevation: 4,
       },
+      
     }),
   },
   favoriteView: {
