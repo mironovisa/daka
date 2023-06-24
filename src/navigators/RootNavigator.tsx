@@ -3,10 +3,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import {View, Text, Platform} from "react-native"
 import HomeNavigator from './HomeNavigator';
 import { Foundation, Ionicons, Entypo, MaterialCommunityIcons } from "@expo/vector-icons"
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import PostNavigator from './PostNavigator';
-
+import ProfileNavigator from "./ProfileNavigator";
+import MessagesNavigator from './MessagesNavigation';
 const Tab = createBottomTabNavigator();
 function RootNavigator() {
   const tabBarSize = Platform.OS === 'android' ? 60 : 80;
@@ -54,7 +54,7 @@ function RootNavigator() {
 />
 <Tab.Screen
   name="Messages"
-  component={HomeNavigator}
+  component={MessagesNavigator}
   options={{
       tabBarIcon: ({ color }) => (
           <View><Ionicons name="chatbox" size={20} color={color} />
@@ -65,7 +65,7 @@ function RootNavigator() {
           />
           <Tab.Screen
   name="Profile"
-  component={HomeNavigator}
+  component={ProfileNavigator}
   options={{
     tabBarIcon: ({ color }) => (
         <MaterialCommunityIcons name="account" size={20} color={color} />

@@ -4,16 +4,19 @@ import productArray from '../../../assets/products';
 import { Product } from '../../models';
 import CategoryMainProducts from "../../components/CategoryMainProducts"
 import FilteringCategory from "../../components/FilteringCategory"
-function index(props) {
+function Index(props) {
     const [products, setProducts] = useState<Product[]>([])
     const [category, setCategory] = useState<Category>(props.route.params.category)
     useEffect(() => {
       setProducts(productArray)
     }, [])
-    return (<ScrollView>
-        <FilteringCategory category={category} />
-   <CategoryMainProducts mainProducts={products} isMainPage={false} />
-         </ScrollView>)
+    return (<View>
+  <FilteringCategory category={category} />
+
+    <CategoryMainProducts mainProducts={products} isMainPage={false} />
+
+</View>
+)
 
  }
-export default index
+export default Index

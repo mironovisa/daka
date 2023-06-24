@@ -13,6 +13,7 @@ import ProducDetailsScreen from '../screens/ProductDetailsScreen';
 import { Feather } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { EvilIcons } from '@expo/vector-icons';
+import OtherUserProfile from "../screens/OtherUserProfileScreen"
 
 const Stack = createStackNavigator();
 const { height, width } = Dimensions.get('window');
@@ -109,7 +110,7 @@ function MyStack({ navigation, route }) {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Home"
+        name="MainHome"
         component={HomeScreen}
         options={{ header: () => <MainHeaderComponent handlePress={handlePress} /> }}
       />
@@ -121,7 +122,7 @@ function MyStack({ navigation, route }) {
           headerRight: () => (
             <View style={{ flexDirection: 'row', marginRight: 15 }}>
               <View>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handlePress}>
                   <Feather name="heart" size={21} color="black" style={{ marginRight: 15 }} />
                 </TouchableOpacity>
               </View>
@@ -145,7 +146,11 @@ function MyStack({ navigation, route }) {
         name="CategoryFiltering"
         component={CategoryFilterScreen}
         options={{ header: () => <MainHeaderComponent isMainPage={false} handlePress={handlePress} /> }}
-      />
+      /><Stack.Screen
+      name="OtherUsersProfile"
+      component={OtherUserProfile}
+      options={{ header: () => <MainHeaderComponent isMainPage={false} handlePress={handlePress} /> }}
+    />
     </Stack.Navigator>
   );
 }

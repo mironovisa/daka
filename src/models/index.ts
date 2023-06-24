@@ -26,3 +26,11 @@ export declare class Filtering{
     readonly id: string;
     readonly name: string;
 }
+export declare class Message{
+    readonly id: number;
+    readonly image: string;
+    readonly productName: string;
+    readonly sellerName: string;
+    readonly situation: string;
+    readonly date: string;
+}

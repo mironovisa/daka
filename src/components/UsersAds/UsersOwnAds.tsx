@@ -37,11 +37,10 @@ function Index({ product }: FavoriteItemProps) {
                       <Text style={{ marginRight: 5, fontWeight: "normal" }}>{product.date} </Text>
                       </View>
             <View style={{ marginTop: 5,  }}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: "space-between", marginRight: 5, }}>
-              <AntDesign name="heart" size={24} color="red" />
-                <Ionicons name="call" color="green" size={24} style={{ marginRight: 5 }} />
-                <Ionicons name="chatbox-ellipses-outline" size={24} style={{ marginRight: 5 }} />
-                <Ionicons name="share-social-outline" size={24} />
+                      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: "space-around", marginRight: 5, }}>
+                      <Ionicons name="share-social-outline" size={24} color="blue" />
+              <Ionicons name="trash-bin-sharp" size={24} color="brown" />
+                
               </View>
             </View>
                   

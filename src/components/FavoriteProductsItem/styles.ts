@@ -5,33 +5,32 @@ const { width } = Dimensions.get("window");
 const styles = StyleSheet.create({
   favorite: {
     marginTop: 10,
-      marginLeft: 3,
-      justifyContent: "center",
-    width: width*0.5,
+    marginLeft: 3,
+    justifyContent: "center",
+    width: width * 0.5,
     ...Platform.select({
       ios: {
         shadowColor: "black",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 4,
+        backgroundColor: "white", // Added background color for iOS shadow
       },
       android: {
         elevation: 4,
       },
-      
     }),
   },
   favoriteView: {
     width: width * 0.45,
     justifyContent: "center",
-      backgroundColor: "white",
-      padding: 10,
+    backgroundColor: "white",
+    padding: 10,
   },
   favoriteImage: {
     width: "100%",
     height: 120,
-      borderRadius: 5,
-
+    borderRadius: 5,
   },
   cityPriceLabel: {
     flexDirection: "row",
@@ -39,7 +38,7 @@ const styles = StyleSheet.create({
   },
   textCity: {
     color: "#3b2f2f",
-      fontWeight: "bold",
+    fontWeight: "bold",
     fontSize: 14,
   },
   textPrice: {
@@ -52,15 +51,15 @@ const styles = StyleSheet.create({
   productName: {
     maxHeight: 40,
     minHeight: 40,
-      overflow: 'hidden',
+    overflow: "hidden",
     paddingTop: 5,
-    },
-    bottomLine: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        paddingTop: 3,
-  }
+  },
+  bottomLine: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingTop: 3,
+  },
 });
 
 export default styles;
