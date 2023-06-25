@@ -45,7 +45,7 @@ const MainHeaderComponent = ({ isMainPage = true }) => {
           backgroundColor: '#e5e5e5',
         }}
       >
-        {!isMainPage && (
+        {!isMainPage?(
           <TouchableOpacity
             style={{
               backgroundColor: '#e5e5e5',
@@ -59,7 +59,7 @@ const MainHeaderComponent = ({ isMainPage = true }) => {
           >
             <Ionicons name="arrow-back" size={24} color="darkgrey" />
           </TouchableOpacity>
-        )}
+        ):null}
 
         <Ionicons name="search" size={24} color="darkgrey" style={{ padding: 10 }} />
         <TextInput

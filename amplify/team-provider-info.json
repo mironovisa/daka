@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-daka-dev-33107-authRole",
+      "UnauthRoleArn": "arn:aws:iam::431767577484:role/amplify-daka-dev-33107-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::431767577484:role/amplify-daka-dev-33107-authRole",
+      "Region": "eu-central-1",
+      "DeploymentBucketName": "amplify-daka-dev-33107-deployment",
+      "UnauthRoleName": "amplify-daka-dev-33107-unauthRole",
+      "StackName": "amplify-daka-dev-33107",
+      "StackId": "arn:aws:cloudformation:eu-central-1:431767577484:stack/amplify-daka-dev-33107/94e7ffa0-12ef-11ee-837b-0a895464d20e",
+      "AmplifyAppId": "d29k8bx0nlon21"
+    },
+    "categories": {
+      "auth": {
+        "dakaedfd39d2": {}
+      }
+    }
+  }
+}

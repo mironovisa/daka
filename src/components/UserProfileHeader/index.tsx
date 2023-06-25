@@ -1,6 +1,16 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, Pressable } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+
+import { Auth } from 'aws-amplify';
+
+async function signOut() {
+  try {
+    await Auth.signOut();
+  } catch (error) {
+    console.log('error signing out: ', error);
+  }
+}
 
 function Index() {
   const averageRating = 3;
@@ -43,7 +53,8 @@ function Index() {
             />
           </View>
         ))}
-      </View>
+        </View>
+        <View><Pressable onPress={signOut}><Text>Quit</Text></Pressable></View>
       </View>
     </View>
   );
