@@ -7,6 +7,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import PostNavigator from './PostNavigator';
 import ProfileNavigator from "./ProfileNavigator";
 import MessagesNavigator from './MessagesNavigation';
+import AddItemNavigator from './AddItemNavigator';
 const Tab = createBottomTabNavigator();
 function RootNavigator() {
   const tabBarSize = Platform.OS === 'android' ? 60 : 80;
@@ -45,7 +46,7 @@ function RootNavigator() {
 />
 <Tab.Screen
   name="Add"
-  component={HomeNavigator}
+  component={AddItemNavigator}
   options={{
       tabBarIcon: ({ color }) => (
         <MaterialIcons name="add-circle-outline" size={20} color={color} />

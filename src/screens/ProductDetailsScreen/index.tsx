@@ -1,16 +1,29 @@
-import React, { useState } from 'react';
-import { View, Image, FlatList, Dimensions, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Image, FlatList, Dimensions, StyleSheet, ActivityIndicator } from 'react-native';
 import { Product } from '../../models';
 import ImageCarousel from '../../components/ImageCarousel';
 import DetailsTextBox from '../../components/DetailsTextBox';
 import SellerInfo from '../../components/SellerInfo';
 import MapInfo from '../../components/MapInfo';
 import CallAndChatButtons from '../../components/CallAndChatButtons';
+import { DataStore } from 'aws-amplify';
 
 const { width, height } = Dimensions.get('window');
 
 function Index(props) {
-  const [product, setProduct] = useState<Product>(props.route.params.product);
+  const [product, setProduct] = useState<Product>();
+  useEffect(() => {
+    if (!props.route.params?.id) return;
+    const fetchProducts = async () => {
+      const results = await DataStore.query(Product, props.route.params.id);
+      setProduct(results)
+    }
+    fetchProducts();
+  }, [props.route.params.id])
+  
+  if (!product) {
+    return <ActivityIndicator/>
+  }
 
   const renderItem = ({ item, index }) => {
     switch (item.type) {

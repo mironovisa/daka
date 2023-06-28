@@ -5,9 +5,9 @@ const { width } = Dimensions.get("window");
 const styles = StyleSheet.create({
   favorite: {
     marginTop: 10,
-    marginLeft: 3,
     justifyContent: "center",
     width: width * 0.5,
+    padding: 10,
     ...Platform.select({
       ios: {
         shadowColor: "black",
@@ -22,10 +22,10 @@ const styles = StyleSheet.create({
     }),
   },
   favoriteView: {
-    width: width * 0.45,
+    width: "100%",
     justifyContent: "center",
     backgroundColor: "white",
-    padding: 10,
+  
   },
   favoriteImage: {
     width: "100%",
