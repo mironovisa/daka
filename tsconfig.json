@@ -1,4 +1,4 @@
-{
+{"typeRoots": ["./src/types"],
   "compilerOptions": {
     "noImplicitAny": true,
     "noEmit": true,

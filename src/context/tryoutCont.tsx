@@ -15,6 +15,9 @@ interface TryContextProps {
   setDescription: React.Dispatch<React.SetStateAction<string>>;
   price: string;
   setPrice: React.Dispatch<React.SetStateAction<string>>;
+  imageUrls: string[];
+  setImageUrls: React.Dispatch<React.SetStateAction<string[]>>;
+  handleImageUriAdd: (uri: string) => void;
 }
 
 interface TryContextProviderProps {
@@ -36,6 +39,9 @@ export const TryContext = createContext<TryContextProps>({
   setDescription: () => {},
   price: '',
   setPrice: () => {},
+  imageUrls: [],
+  setImageUrls: () => {},
+  handleImageUriAdd: () => {},
 });
 
 export const TryContextProvider: React.FC<TryContextProviderProps> = ({ children }) => {
@@ -46,6 +52,7 @@ export const TryContextProvider: React.FC<TryContextProviderProps> = ({ children
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [price, setPrice] = useState<string>('');
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
 
   const updateValue = (newValue: string) => {
     setMyValue(newValue);
@@ -61,6 +68,10 @@ export const TryContextProvider: React.FC<TryContextProviderProps> = ({ children
 
   const handleChooseSubCategory = (newValue: string) => {
     setSubcategory(newValue);
+  };
+
+  const handleImageUriAdd = (uri: string) => {
+    setImageUrls((prevUrls) => [...prevUrls, uri]);
   };
 
   return (
@@ -80,6 +91,9 @@ export const TryContextProvider: React.FC<TryContextProviderProps> = ({ children
         setDescription,
         price,
         setPrice,
+        imageUrls,
+        setImageUrls,
+        handleImageUriAdd,
       }}
     >
       {children}

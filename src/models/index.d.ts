@@ -81,6 +81,7 @@ type EagerProduct = {
   readonly isPaid?: boolean | null;
   readonly userId?: string | null;
   readonly Subcategories?: (ProductSubcategory | null)[] | null;
+  readonly images?: string[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   readonly categoryProductsId?: string | null;
@@ -101,6 +102,7 @@ type LazyProduct = {
   readonly isPaid?: boolean | null;
   readonly userId?: string | null;
   readonly Subcategories: AsyncCollection<ProductSubcategory>;
+  readonly images?: string[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   readonly categoryProductsId?: string | null;

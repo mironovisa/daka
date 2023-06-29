@@ -100,12 +100,12 @@ const FirstPage: React.FC<FirstPageProps> = ({ onNextPage, containerStyle, textS
   return (
     <View style={[styles.container, containerStyle]}>
       <Text style={[styles.text, textStyle]}>Hi!</Text>
-      <TextInput
+      {/* <TextInput
         style={styles.input}
         value={inputValue}
         onChangeText={setInputValue}
         placeholder="Enter a value"
-      />
+      /> */}
       <View style={styles.input}>
         <RNPickerSelect
           placeholder={{ label: 'Select a category', value: null }}
@@ -136,9 +136,9 @@ const FirstPage: React.FC<FirstPageProps> = ({ onNextPage, containerStyle, textS
           />
         </View>
       )}
-      <TouchableOpacity onPress={handleButtonClick}>
+      {/* <TouchableOpacity onPress={handleButtonClick}>
         <Text style={styles.buttonText}>Send Value to Context</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <TouchableOpacity onPress={onNextPage}>
         <Text style={styles.buttonText}>Hey!</Text>
       </TouchableOpacity>

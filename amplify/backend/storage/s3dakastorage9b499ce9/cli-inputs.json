@@ -1,0 +1,11 @@
+{
+  "resourceName": "s3dakastorage9b499ce9",
+  "bucketName": "daka-storage-9b499ce9",
+  "policyUUID": "5fd295a3",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ"
+  ]
+}

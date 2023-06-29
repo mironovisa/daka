@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { View, Text } from 'react-native';
 import { TryContext } from '../../context/tryoutCont';
-import ComponentA from './componentA';
+import ComponentA from './addItemPhotoNameDescPriceComp';
 
 // interface ComponentAProps {
 //   text: string;
@@ -40,10 +40,10 @@ function MyComponent() {
 
   return (
     <View>
-      <Text>Value from Context: {value}</Text>
+      {/* <Text>Value from Context: {value}</Text>
       <Text>UserSub: {userSub}</Text>
       <Text>Category: {category}</Text>
-      <Text>Subcategory: {subcategory}</Text>
+      <Text>Subcategory: {subcategory}</Text> */}
       
       {renderSubcategoryComponent()}
     </View>

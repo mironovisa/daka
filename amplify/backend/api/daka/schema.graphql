@@ -21,6 +21,7 @@ type Product @model @auth(rules: [{allow: public}]) {
   isPaid: Boolean
   userId: ID
   Subcategories: [Subcategory] @manyToMany(relationName: "ProductSubcategory")
+  images: [String!]
 }
 
 type Category @model @auth(rules: [{allow: public}]) {

@@ -17,6 +17,9 @@
       },
       "api": {
         "daka": {}
+      },
+      "storage": {
+        "s3dakastorage9b499ce9": {}
       }
     }
   }
