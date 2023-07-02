@@ -3,16 +3,6 @@ import { View, Text } from 'react-native';
 import { TryContext } from '../../context/tryoutCont';
 import ComponentA from './addItemPhotoNameDescPriceComp';
 
-// interface ComponentAProps {
-//   text: string;
-// }
-
-// const ComponentA: React.FC<ComponentAProps> = ({ text }) => {
-//   return (
-// <ComponentA/>
-//   );
-// };
-
 interface ComponentBProps {
   text: string;
 }

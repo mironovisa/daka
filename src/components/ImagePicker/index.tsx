@@ -1,164 +1,270 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
-import AddedImagesCarousel from '../../components/AddedImagesCarousel';
-import { Storage } from 'aws-amplify';
-import { TryContext } from '../../context/tryoutCont';
-import path from 'path';
+import React, { useState, useEffect, useContext } from "react";
+import {
+  Image,
+  View,
+  Platform,
+  TouchableOpacity,
+  FlatList,
+  Text,
+  Dimensions,
+  StyleSheet,
+} from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import { Amplify, Storage } from "aws-amplify";
+import awsconfig from "../../aws-exports";
+import { TryContext } from "../../context/tryoutCont";
+import ImagePickerModal from "./modal";
+import { fetchImage } from "./functions";
+import { AntDesign } from "@expo/vector-icons";
+import ImagePile from "./imagePile";
+import ListFooter from "./listFooterComp";
 
+Amplify.configure(awsconfig);
 
-const Index = () => {
-  const [images, setImages] = useState<string[]>([]);
-  const [count, setCount] = useState(0);
+const { height, width } = Dimensions.get("screen");
+
+interface ImagePickerProps {
+  onNextPage: () => void;
+  onPrevPage: () => void;
+}
+
+export default function ImagePickerExample({
+  onNextPage,
+  onPrevPage,
+}: ImagePickerProps) {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [image, setImage] = useState([]);
+  const [imageAsset, setImageAsset] = useState([]);
   const { setImageUrls } = useContext(TryContext);
 
+  const deleteByValue = (value) => {
+    setImage((oldValues) => {
+      return oldValues.filter((img) => img !== value);
+    });
+
+    setImageAsset((oldAssets) => {
+      return oldAssets.filter((asset) => asset.uri !== value);
+    });
+  };
+
   useEffect(() => {
-    (async () => {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== 'granted') {
-        alert('Camera roll permission required');
-      }
+    console.log(imageAsset);
+  }, [imageAsset]);
 
-      const { status: cameraStatus } = await ImagePicker.requestCameraPermissionsAsync();
-      if (cameraStatus !== 'granted') {
-        alert('Camera permission required');
-      }
-    })();
-  }, [count]);
+  const uploadFile = async (file) => {
+    const img = await fetchImage(file.uri);
+    return Storage.put(`my-image-filename${Math.random()}.jpg`, img, {
+      level: "public",
+      contentType: file.type,
+      progressCallback(uploadProgress) {
+        console.log(
+          "PROGRESS",
+          uploadProgress.loaded + "/" + uploadProgress.total
+        );
+      },
+    })
+      .then((res) => {
+        Storage.get(res.key)
+          .then((res) => {
+            console.log("Result", res);
+            const clearedUrl = res.split("?")[0];
+            setImageUrls((prevUrl) => [...prevUrl, clearedUrl]);
+            console.log(clearedUrl);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      })
+      .catch((e) => console.log(e));
+  };
 
-  const pickImage = async () => {
-    setCount(count + 1);
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsMultipleSelection: true,
-        selectionLimit: 4,
-        base64: false,
-      quality: 1,
-    });
-console.log("The result is:",result);
-    if (!result.canceled) {
-        const newImages = result.assets.map((asset) => asset.uri);
-        console.log("URIKI", newImages);
-      setImages((prevImages) => [...prevImages, ...newImages]);
+  const showModal = () => {
+    setModalVisible(!modalVisible);
+  };
+
+  const handlePickImage = async (mediaType) => {
+    showModal();
+
+    let result;
+    let quality = 1; // Default quality for Android
+
+    if (Platform.OS === "ios") {
+      quality = 0; // Set quality to 0 for iOS
     }
-  };
 
-  const pickImageCamera = async () => {
-    setCount(count + 1);
-    let result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsMultipleSelection: true,
-      // Add any other camera options you need
-    });
-
-    if (!result.canceled) {
-      setImages((prevImages) => [...prevImages, result.assets[0].uri]);
-    }
-  };
-
-  const fetchImageUrl = async (imageUri: string) => {
-    return new Promise<Blob>((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = () => {
-        resolve(xhr.response);
-      };
-      xhr.onerror = () => {
-        reject(new Error('Error fetching image'));
-      };
-      xhr.open('GET', imageUri, true);
-      xhr.responseType = 'blob';
-      xhr.send();
-    });
-  };
-  
-  const uploadImagesToStorage = async () => {
-    try {
-      const uploadPromises = images.map(async (imageUri) => {
-        const blob = await fetchImageUrl(imageUri);
-        const filename = imageUri.split('/').pop();
-        const extension = path.extname(filename).toLowerCase();
-        const contentType = `image/${extension}`;
-        await Storage.put(filename, blob, {
-          contentType,
-          progressCallback(uploadProgress) {
-            console.log('Progress', uploadProgress.loaded + '/' + uploadProgress.total);
-          },
-        });
+    if (mediaType === "camera") {
+      result = await ImagePicker.launchCameraAsync({
+        allowsMultipleSelection: true,
+        aspect: [4, 3],
+        quality: 1,
       });
-  
-      await Promise.all(uploadPromises);
-  
-      // Retrieve the URLs of the uploaded images
-      const imageUrls = await Promise.all(
-        images.map(async (imageUri) => {
-          const filename = imageUri.split('/').pop();
-          const response = await Storage.get(filename);
-          const index = filename.indexOf('?');
-          const cleanUrl = index !== -1 ? filename.substring(0, index) : filename;
-          const bucketBaseUrl = 'https://daka-storage-9b499ce933107-dev.s3.eu-central-1.amazonaws.com/public/';
-          return bucketBaseUrl + cleanUrl;
-        })
-      );
-  
-      setImageUrls(imageUrls);
-      console.log(imageUrls);
-    } catch (error) {
-      console.error('Error uploading images:', error);
+    } else {
+      result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsMultipleSelection: true,
+        aspect: [4, 3],
+        selectionLimit: 5 - image.length, // Set the selection limit based on the remaining slots
+        quality: 0,
+      });
+    }
+
+    if (!result.canceled) {
+      const newImages = result.assets.map((asset) => asset.uri);
+      setImage((prev) => [...prev, ...newImages]);
+      setImageAsset((prev) => [...prev, ...result.assets]);
     }
   };
-  
+
+  const handleNextButton = async () => {
+    for (const asset of imageAsset) {
+      try {
+        await uploadFile(asset);
+      } catch (error) {
+        console.log("Error uploading file:", error);
+      }
+    }
+
+    onNextPage();
+  };
+
+  const isButtonDisabled = image.length <= 0;
 
   return (
     <View style={styles.container}>
-      <AddedImagesCarousel images={images} setImages={setImages} />
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={pickImage} style={[styles.button, styles.galleryButton]}>
-          <Text style={styles.buttonText}>Add from gallery</Text>
+      {/* {!image[0] && (
+        <TouchableOpacity onPress={showModal}>
+          <Image source={addPh} style={styles.placeholderImage} />
         </TouchableOpacity>
+      )} */}
+      <ImagePickerModal
+        isVisible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onCameraPress={() => {
+          handlePickImage("camera");
+          setModalVisible(false);
+        }}
+        onLibraryPress={() => {
+          handlePickImage("library");
+          setModalVisible(false);
+        }}
+      />
+      <View>
+        <FlatList
+          data={image}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          renderItem={({ item }) => (
+            <ImagePile img={item} deleteByValue={deleteByValue} />
+          )}
+          ListFooterComponent={
+            <View style={styles.listFooterContainer}>
+              <ListFooter onPressA={showModal} />
+            </View>
+          }
+        />
+      </View>
 
-        <TouchableOpacity onPress={pickImageCamera} style={[styles.button, styles.cameraButton]}>
-          <Text style={styles.buttonText}>Take a photo!</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={uploadImagesToStorage} style={[styles.button, styles.uploadButton]}>
-          <Text style={styles.buttonText}>Upload Images</Text>
-        </TouchableOpacity>
+      <View style={styles.bottomButtonsContainer}>
+        <View style={styles.button}>
+          <TouchableOpacity onPress={onPrevPage}>
+            <Text style={styles.buttonText}>Back</Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={[
+            styles.button,
+            isButtonDisabled && styles.buttonContainerDisabled,
+          ]}
+        >
+          <TouchableOpacity
+            onPress={handleNextButton}
+            disabled={isButtonDisabled}
+          >
+            <Text style={styles.buttonText}>Next</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
-  buttonContainer: {
-    flexDirection: 'row',
+  placeholderImage: {
+    width: 200,
+    height: 200,
+  },
+  scrollView: {
+    height: height * 0.3,
+  },
+  imageContainer: {
+    flex: 1,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    paddingTop: 10,
+  },
+
+  image: {
+    height: height * 0.5,
+    width: (width - 20) / 2, // Divide width equally between two columns and subtract padding
+    resizeMode: "cover",
+  },
+
+  imageInfoContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  imageInfo: {
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    padding: 5,
+    borderRadius: 5,
+    flexDirection: "row",
+  },
+  imageInfoText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+  actionButtonsContainer: {
+    flexDirection: "row",
+  },
+
+  addButton: {
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    borderRadius: 5,
+    width: 30,
+    height: 30,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  bottomButtonsContainer: {
+    position: "absolute",
+    bottom: 30,
+    justifyContent: "space-between",
+    flexDirection: "row",
+    width: width,
   },
   button: {
-    width: '33%',
-    height: 50,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: 10,
-  },
-  galleryButton: {
-    backgroundColor: 'lightblue',
-  },
-  cameraButton: {
-    backgroundColor: 'lightgreen',
-  },
-  uploadButton: {
-    backgroundColor: 'orange',
+    marginHorizontal: 10,
+    backgroundColor: "#4f992e",
+    padding: 15,
+    borderRadius: 15,
+    width: 100,
+    alignItems: "center",
   },
   buttonText: {
     fontSize: 18,
-    color: 'white',
+    color: "white",
+  },
+  buttonContainerDisabled: {
+    opacity: 0.5,
+  },
+  listFooterContainer: {
+    alignItems: "flex-start",
+    flexDirection: "column", // Display items in a row
+    justifyContent: "flex-start", // Space items evenly// Add margin for separation
   },
 });
-
-export default Index;

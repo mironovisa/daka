@@ -1,13 +1,24 @@
-import React, { useState, useRef } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import PagerView from 'react-native-pager-view';
-import FirstPage from './firstPage';
-import MyComponent from './store';
-import { MyContextProvider } from '../../context/addItem'; // Import the MyContextProvider component
-import { TryContextProvider } from '../../context/tryoutCont'; 
+import React, { useState, useRef, useEffect } from "react";
+import { StyleSheet, View, Text } from "react-native";
+import { useIsFocused } from "@react-navigation/native"; // Import useIsFocused hook
+import PagerView from "react-native-pager-view";
+import CategoryPicker from "./CategoryPicker";
+import MyComponent from "./store";
+import ImagePicker from "../../components/ImagePicker";
+import AddInitDataComp from "./addItemPhotoNameDescPriceComp";
+
 const MyPager = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const pagerRef = useRef<PagerView>(null);
+  const isFocused = useIsFocused(); // Get the screen focus state
+
+  useEffect(() => {
+    // Reset current page to 0 whenever the screen gains focus
+    if (isFocused) {
+      setCurrentPage(0);
+      pagerRef.current?.setPage(0);
+    }
+  }, [isFocused]);
 
   const handleNextPage = () => {
     const nextPage = currentPage + 1;
@@ -15,34 +26,34 @@ const MyPager = () => {
     pagerRef.current?.setPage(nextPage);
   };
 
+  const handleBackPage = () => {
+    const prevPage = currentPage - 1;
+    setCurrentPage(prevPage);
+    pagerRef.current?.setPage(prevPage);
+  };
+
   const onPageSelected = (e: { nativeEvent: { position: number } }) => {
     setCurrentPage(e.nativeEvent.position);
   };
 
-    return (
-      <TryContextProvider>
-    <MyContextProvider>
-      <PagerView
-        style={styles.pagerView}
-        initialPage={currentPage}
-        scrollEnabled={false}
-        onPageSelected={onPageSelected}
-        ref={pagerRef}
-      >
-        <View key="1" style={styles.page}>
-          <FirstPage onNextPage={handleNextPage} />
-        </View>
-
-        <View key="2" style={styles.page}>
-          <MyComponent />
-        </View>
-
-        <View key="3" style={styles.page}>
-          <Text>Hey!</Text>
-        </View>
-      </PagerView>
-            </MyContextProvider>
-            </TryContextProvider>
+  return (
+    <PagerView
+      style={styles.pagerView}
+      initialPage={currentPage}
+      scrollEnabled={false}
+      onPageSelected={onPageSelected}
+      ref={pagerRef}
+    >
+      <View key="1" style={styles.page}>
+        <CategoryPicker onNextPage={handleNextPage} />
+      </View>
+      <View key="2" style={styles.page}>
+        <ImagePicker onNextPage={handleNextPage} onPrevPage={handleBackPage} />
+      </View>
+      <View key="3" style={styles.page}>
+        <AddInitDataComp onNextPage={handleNextPage} onPrevPage={handleBackPage}/>
+      </View>
+    </PagerView>
   );
 };
 
@@ -51,8 +62,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   page: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

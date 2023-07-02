@@ -43,14 +43,14 @@ const MainHeaderComponent = ({ isMainPage = true }) => {
 function MyStack({ navigation, route }) {
   const tabHiddenRoutes = ["ProductDetails"]
   
-  React.useLayoutEffect(() => {
-    const routeName = getFocusedRouteNameFromRoute(route);
-    if (tabHiddenRoutes.includes(routeName)) {
-      navigation.setOptions({ tabBarStyle: { display: "none" } })
-    } else {
-      navigation.setOptions({ tabBarStyle: { display: "true" } })
-    }
-  }, [navigation, route])
+  // React.useLayoutEffect(() => {
+  //   const routeName = getFocusedRouteNameFromRoute(route);
+  //   if (tabHiddenRoutes.includes(routeName)) {
+  //     navigation.setOptions({ tabBarStyle: { display: "none" } })
+  //   } else {
+  //     navigation.setOptions({ tabBarStyle: { display: "true" } })
+  //   }
+  // }, [navigation, route])
 
   return (
     <Stack.Navigator>

@@ -19,7 +19,8 @@
         "daka": {}
       },
       "storage": {
-        "s3dakastorage9b499ce9": {}
+        "s3dakastorage9b499ce9": {},
+        "s3b0628b39": {}
       }
     }
   }

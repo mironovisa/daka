@@ -1,14 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, } from 'react-native';
 import {NavigationContainer} from "@react-navigation/native"
 import RootNavigator from './src/navigators/RootNavigator';
-import { Amplify, Storage } from 'aws-amplify';
+import { Amplify,} from 'aws-amplify';
 import {
-  useAuthenticator,
-  withAuthenticator, Authenticator
+  withAuthenticator
 } from '@aws-amplify/ui-react-native';
 import awsExports from './src/aws-exports';
-
+import { TryContextProvider } from './src/context/tryoutCont'; 
 
 
 Amplify.configure(awsExports);
@@ -22,11 +21,11 @@ function App() {
   // };
   return (
     // <View style={styles.container}>
-
+<TryContextProvider>
     <NavigationContainer >
             <StatusBar />
       <RootNavigator />
-      </NavigationContainer>
+      </NavigationContainer></TryContextProvider>
     // </View>r
   );
 }
