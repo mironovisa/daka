@@ -6,7 +6,7 @@ import { Amplify } from "aws-amplify";
 import { withAuthenticator } from "@aws-amplify/ui-react-native";
 import awsExports from "./src/aws-exports";
 import { TryContextProvider } from "./src/context/tryoutCont";
-import { AppRegistry, Platform } from "react-native";
+
 
 Amplify.configure(awsExports);
 function App() {
