@@ -1,9 +1,48 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import {
+  getCurrentPositionAsync,
+  useForegroundPermissions,
+  PermissionStatus,
+} from "expo-location";
 
-function index() {
-  function getLocationHandler() {}
-  function pickOnMapHandler() {}
+const Index = () => {
+  const [locationPermissionInformation, requestPermission] =
+    useForegroundPermissions();
+
+  async function verifyPermissions() {
+    if (
+      locationPermissionInformation.status === PermissionStatus.UNDETERMINED
+    ) {
+      const permissionResponse = await requestPermission();
+      return permissionResponse.granted;
+    }
+
+    if (locationPermissionInformation.status === PermissionStatus.DENIED) {
+      Alert.alert(
+        "You need to grant permission for location in order to continue."
+      );
+      return false;
+    }
+
+    // Handle the case where the permission is already granted
+    return true;
+  }
+
+  async function getLocationHandler() {
+    const hasPermission = await verifyPermissions();
+    if (!hasPermission) {
+      return;
+    }
+
+    const location = await getCurrentPositionAsync();
+    console.log(location);
+  }
+
+  function pickOnMapHandler() {
+    // Implement the logic for picking a location on the map
+  }
+
   return (
     <View>
       <View style={styles.mapPreview}></View>
@@ -17,9 +56,9 @@ function index() {
       </View>
     </View>
   );
-}
+};
 
-export default index;
+export default Index;
 
 const styles = StyleSheet.create({
   mapPreview: {

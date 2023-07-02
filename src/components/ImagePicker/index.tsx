@@ -4,7 +4,6 @@ import {
   View,
   Platform,
   TouchableOpacity,
-  FlatList,
   Text,
   Dimensions,
   StyleSheet,
@@ -16,8 +15,11 @@ import { TryContext } from "../../context/tryoutCont";
 import ImagePickerModal from "./modal";
 import { fetchImage } from "./functions";
 import { AntDesign } from "@expo/vector-icons";
+import DraggableFlatList from "react-native-draggable-flatlist";
 import ImagePile from "./imagePile";
-import ListFooter from "./listFooterComp";
+import addPhoto from "../../../assets/addPhoto.png";
+import { MaterialIcons } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 
 Amplify.configure(awsconfig);
 
@@ -27,29 +29,21 @@ interface ImagePickerProps {
   onNextPage: () => void;
   onPrevPage: () => void;
 }
-
-export default function ImagePickerExample({
-  onNextPage,
-  onPrevPage,
-}: ImagePickerProps) {
+const ImagePickerExample = ({ onNextPage, onPrevPage }: ImagePickerProps) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [image, setImage] = useState([]);
-  const [imageAsset, setImageAsset] = useState([]);
+  const [images, setImages] = useState([]);
+  const [mainImageIndex, setMainImageIndex] = useState(0);
   const { setImageUrls } = useContext(TryContext);
 
   const deleteByValue = (value) => {
-    setImage((oldValues) => {
-      return oldValues.filter((img) => img !== value);
-    });
-
-    setImageAsset((oldAssets) => {
-      return oldAssets.filter((asset) => asset.uri !== value);
+    setImages((oldImages) => {
+      return oldImages.filter((img) => img !== value);
     });
   };
 
   useEffect(() => {
-    console.log(imageAsset);
-  }, [imageAsset]);
+    console.log(images);
+  }, [images]);
 
   const uploadFile = async (file) => {
     const img = await fetchImage(file.uri);
@@ -103,20 +97,19 @@ export default function ImagePickerExample({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsMultipleSelection: true,
         aspect: [4, 3],
-        selectionLimit: 5 - image.length, // Set the selection limit based on the remaining slots
+        selectionLimit: 5 - images.length, // Set the selection limit based on the remaining slots
         quality: 0,
       });
     }
 
-    if (!result.canceled) {
+    if (!result.cancelled) {
       const newImages = result.assets.map((asset) => asset.uri);
-      setImage((prev) => [...prev, ...newImages]);
-      setImageAsset((prev) => [...prev, ...result.assets]);
+      setImages((prev) => [...prev, ...newImages]);
     }
   };
 
   const handleNextButton = async () => {
-    for (const asset of imageAsset) {
+    for (const asset of images) {
       try {
         await uploadFile(asset);
       } catch (error) {
@@ -127,15 +120,21 @@ export default function ImagePickerExample({
     onNextPage();
   };
 
-  const isButtonDisabled = image.length <= 0;
+  const isButtonDisabled = images.length <= 0;
+
+  const setMainImage = (index) => {
+    setMainImageIndex(index);
+  };
 
   return (
     <View style={styles.container}>
-      {/* {!image[0] && (
-        <TouchableOpacity onPress={showModal}>
-          <Image source={addPh} style={styles.placeholderImage} />
-        </TouchableOpacity>
-      )} */}
+      {images.length === 0 && (
+        <View>
+          <TouchableOpacity onPress={showModal}>
+            <Image source={addPhoto} style={styles.addPhotoCont} />
+          </TouchableOpacity>
+        </View>
+      )}
       <ImagePickerModal
         isVisible={modalVisible}
         onClose={() => setModalVisible(false)}
@@ -148,26 +147,53 @@ export default function ImagePickerExample({
           setModalVisible(false);
         }}
       />
-      <View>
-        <FlatList
-          data={image}
-          keyExtractor={(item) => item.id}
-          numColumns={2}
-          renderItem={({ item }) => (
-            <ImagePile img={item} deleteByValue={deleteByValue} />
-          )}
-          ListFooterComponent={
-            <View style={styles.listFooterContainer}>
-              <ListFooter onPressA={showModal} />
+
+      {images.length === 0 && (
+        <View style={styles.noticeContainer}>
+          <View style={styles.notice}>
+            <MaterialIcons
+              name="notification-important"
+              size={24}
+              color="black"
+            />
+            <View style={styles.noticeText}>
+              <Text numberOfLines={3} ellipsizeMode="clip">
+                Please, choose at least one image. Maximum of 5 images is
+                allowed.
+              </Text>
             </View>
-          }
-        />
+          </View>
+          <View style={styles.noticeTwo}>
+            <Entypo name="light-bulb" size={24} color="black" />
+            <View style={styles.noticeText}>
+              <Text
+                style={styles.noticeDescription}
+                numberOfLines={3}
+                ellipsizeMode="clip"
+              >
+                It would be wonderful for other users to see good quality images
+                that show what you sell in the best way!
+              </Text>
+            </View>
+          </View>
+        </View>
+      )}
+
+      <View style={styles.grid}>
+        {images.map((item, index) => (
+          <ImagePile key={index} img={item} deleteByValue={deleteByValue} />
+        ))}
       </View>
 
       <View style={styles.bottomButtonsContainer}>
         <View style={styles.button}>
           <TouchableOpacity onPress={onPrevPage}>
-            <Text style={styles.buttonText}>Back</Text>
+            <View style={styles.buttonInnerContainer}>
+              <View style={styles.buttonIconContainer}>
+                <AntDesign name="arrowleft" size={20} color="black" />
+              </View>
+              <Text style={styles.buttonText}>Back</Text>
+            </View>
           </TouchableOpacity>
         </View>
         <View
@@ -180,91 +206,94 @@ export default function ImagePickerExample({
             onPress={handleNextButton}
             disabled={isButtonDisabled}
           >
-            <Text style={styles.buttonText}>Next</Text>
+            <View style={styles.buttonInnerContainer}>
+              <Text style={styles.buttonText}>Next</Text>
+              <View style={styles.buttonIconContainer}>
+                <AntDesign name="arrowright" size={20} color="black" />
+              </View>
+            </View>
           </TouchableOpacity>
         </View>
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
   },
-  placeholderImage: {
+  noticeContainer: {
+    width: width,
+  },
+  notice: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "darkorange",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  },
+  noticeText: {
+    flex: 1,
+    marginLeft: 10,
+  },
+  noticeDescription: {
+    marginTop: 10,
+  },
+  noticeTwo: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "lightgreen",
+    borderRadius: 5,
+    padding: 5,
+    marginBottom: 10,
+  },
+
+  addPhotoCont: {
     width: 200,
     height: 200,
   },
-  scrollView: {
-    height: height * 0.3,
-  },
-  imageContainer: {
-    flex: 1,
+  grid: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    paddingTop: 10,
-  },
-
-  image: {
-    height: height * 0.5,
-    width: (width - 20) / 2, // Divide width equally between two columns and subtract padding
-    resizeMode: "cover",
-  },
-
-  imageInfoContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  imageInfo: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    padding: 5,
-    borderRadius: 5,
-    flexDirection: "row",
-  },
-  imageInfoText: {
-    color: "white",
-    fontWeight: "bold",
-  },
-  actionButtonsContainer: {
-    flexDirection: "row",
-  },
-
-  addButton: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    borderRadius: 5,
-    width: 30,
-    height: 30,
-    alignItems: "center",
-    justifyContent: "center",
+    marginBottom: 20,
   },
   bottomButtonsContainer: {
     position: "absolute",
     bottom: 30,
-    justifyContent: "space-between",
     flexDirection: "row",
-    width: width,
+    justifyContent: "space-between",
+    width: "100%",
   },
   button: {
-    marginHorizontal: 10,
-    backgroundColor: "#4f992e",
-    padding: 15,
-    borderRadius: 15,
-    width: 100,
+    backgroundColor: "white",
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: "gray",
+    alignItems: "center",
+    justifyContent: "center",
+    opacity: 0.9,
+  },
+  buttonInnerContainer: {
+    flexDirection: "row",
     alignItems: "center",
   },
+  buttonIconContainer: {
+    paddingRight: 5,
+  },
   buttonText: {
-    fontSize: 18,
-    color: "white",
+    fontSize: 20,
+    color: "black",
   },
   buttonContainerDisabled: {
     opacity: 0.5,
   },
-  listFooterContainer: {
-    alignItems: "flex-start",
-    flexDirection: "column", // Display items in a row
-    justifyContent: "flex-start", // Space items evenly// Add margin for separation
-  },
 });
+
+export default ImagePickerExample;
