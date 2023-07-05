@@ -1,6 +1,11 @@
-import React from "react";
-import { View, Image, StyleSheet, TouchableOpacity } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
+import React, { useRef, useEffect } from "react";
+import {
+  View,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Animated,
+} from "react-native";
 import addPhoto from "../../../assets/addPhoto.png";
 
 interface ImagePileProps {
@@ -8,10 +13,34 @@ interface ImagePileProps {
 }
 
 function ListFooter({ onPressA }: ImagePileProps) {
+  const scaleValue = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      Animated.sequence([
+        Animated.timing(scaleValue, {
+          toValue: 1.2,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scaleValue, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }, 1500);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={onPressA}>
-        <Image source={addPhoto} style={styles.image} />
+        <Animated.Image
+          source={addPhoto}
+          style={[styles.image, { transform: [{ scale: scaleValue }] }]}
+        />
       </TouchableOpacity>
     </View>
   );
@@ -31,26 +60,5 @@ const styles = StyleSheet.create({
     width: 150,
     resizeMode: "cover",
     borderRadius: 10,
-  },
-  actionButton: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    borderRadius: 5,
-    width: 30,
-    height: 30,
-    alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 10,
-  },
-  deleteButton: {
-    position: "absolute",
-    right: 10,
-    bottom: 2,
-    opacity: 0.5,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    borderRadius: 5,
-    width: 30,
-    height: 30,
-    alignItems: "center",
-    justifyContent: "center",
   },
 });

@@ -28,11 +28,12 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
+    alignContent: "center",
     margin: 15,
   },
   image: {
-    height: 150,
-    width: 150,
+    height: 130,
+    width: 130,
     resizeMode: "cover",
     borderRadius: 10,
   },

@@ -1,0 +1,22 @@
+{
+  "appName": "daka",
+  "roleName": "pinpointLambdaRole05e1f705",
+  "cloudformationPolicyName": "cloudformationPolicy05e1f705",
+  "cloudWatchPolicyName": "cloudWatchPolicy05e1f705",
+  "pinpointPolicyName": "pinpointPolicy05e1f705",
+  "authPolicyName": "pinpoint_amplify_05e1f705",
+  "unauthPolicyName": "pinpoint_amplify_05e1f705",
+  "authRoleName": {
+    "Ref": "AuthRoleName"
+  },
+  "unauthRoleName": {
+    "Ref": "UnauthRoleName"
+  },
+  "authRoleArn": {
+    "Fn::GetAtt": [
+      "AuthRole",
+      "Arn"
+    ]
+  },
+  "pinpointInAppMessagingPolicyName": "pinpointInAppMessagingPolicyName05e1f705"
+}

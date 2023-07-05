@@ -6,6 +6,40 @@ import { LazyLoading, LazyLoadingDisabled, AsyncCollection, AsyncItem } from "@a
 
 
 
+type EagerChat = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<Chat, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly sellerId?: string | null;
+  readonly buyerId?: string | null;
+  readonly productId?: string | null;
+  readonly messages?: (Message | null)[] | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyChat = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<Chat, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly sellerId?: string | null;
+  readonly buyerId?: string | null;
+  readonly productId?: string | null;
+  readonly messages: AsyncCollection<Message>;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type Chat = LazyLoading extends LazyLoadingDisabled ? EagerChat : LazyChat
+
+export declare const Chat: (new (init: ModelInit<Chat>) => Chat) & {
+  copyOf(source: Chat, mutator: (draft: MutableModel<Chat>) => MutableModel<Chat> | void): Chat;
+}
+
 type EagerSubcategory = {
   readonly [__modelMeta__]: {
     identifier: ManagedIdentifier<Subcategory, 'id'>;
@@ -14,7 +48,6 @@ type EagerSubcategory = {
   readonly id: string;
   readonly Categories?: (SubcategoryCategory | null)[] | null;
   readonly name?: string | null;
-  readonly products?: (ProductSubcategory | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -27,7 +60,6 @@ type LazySubcategory = {
   readonly id: string;
   readonly Categories: AsyncCollection<SubcategoryCategory>;
   readonly name?: string | null;
-  readonly products: AsyncCollection<ProductSubcategory>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -44,7 +76,10 @@ type EagerUser = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly name: string;
+  readonly userSub?: string | null;
+  readonly language?: string | null;
+  readonly lastSeen?: string | null;
+  readonly userName?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -55,7 +90,10 @@ type LazyUser = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly name: string;
+  readonly userSub?: string | null;
+  readonly language?: string | null;
+  readonly lastSeen?: string | null;
+  readonly userName?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -80,7 +118,6 @@ type EagerProduct = {
   readonly city?: string | null;
   readonly isPaid?: boolean | null;
   readonly userId?: string | null;
-  readonly Subcategories?: (ProductSubcategory | null)[] | null;
   readonly images?: string[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
@@ -101,7 +138,6 @@ type LazyProduct = {
   readonly city?: string | null;
   readonly isPaid?: boolean | null;
   readonly userId?: string | null;
-  readonly Subcategories: AsyncCollection<ProductSubcategory>;
   readonly images?: string[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
@@ -188,11 +224,9 @@ type EagerMessage = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly image: string;
-  readonly productName: string;
-  readonly sellerName: string;
-  readonly situation: string;
+  readonly userId: string;
   readonly date: string;
+  readonly chatID: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -203,11 +237,9 @@ type LazyMessage = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly image: string;
-  readonly productName: string;
-  readonly sellerName: string;
-  readonly situation: string;
+  readonly userId: string;
   readonly date: string;
+  readonly chatID: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -250,38 +282,4 @@ export declare type SubcategoryCategory = LazyLoading extends LazyLoadingDisable
 
 export declare const SubcategoryCategory: (new (init: ModelInit<SubcategoryCategory>) => SubcategoryCategory) & {
   copyOf(source: SubcategoryCategory, mutator: (draft: MutableModel<SubcategoryCategory>) => MutableModel<SubcategoryCategory> | void): SubcategoryCategory;
-}
-
-type EagerProductSubcategory = {
-  readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<ProductSubcategory, 'id'>;
-    readOnlyFields: 'createdAt' | 'updatedAt';
-  };
-  readonly id: string;
-  readonly subcategoryId?: string | null;
-  readonly productId?: string | null;
-  readonly subcategory: Subcategory;
-  readonly product: Product;
-  readonly createdAt?: string | null;
-  readonly updatedAt?: string | null;
-}
-
-type LazyProductSubcategory = {
-  readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<ProductSubcategory, 'id'>;
-    readOnlyFields: 'createdAt' | 'updatedAt';
-  };
-  readonly id: string;
-  readonly subcategoryId?: string | null;
-  readonly productId?: string | null;
-  readonly subcategory: AsyncItem<Subcategory>;
-  readonly product: AsyncItem<Product>;
-  readonly createdAt?: string | null;
-  readonly updatedAt?: string | null;
-}
-
-export declare type ProductSubcategory = LazyLoading extends LazyLoadingDisabled ? EagerProductSubcategory : LazyProductSubcategory
-
-export declare const ProductSubcategory: (new (init: ModelInit<ProductSubcategory>) => ProductSubcategory) & {
-  copyOf(source: ProductSubcategory, mutator: (draft: MutableModel<ProductSubcategory>) => MutableModel<ProductSubcategory> | void): ProductSubcategory;
 }

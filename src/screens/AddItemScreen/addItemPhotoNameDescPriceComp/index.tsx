@@ -10,7 +10,7 @@ import {
   Dimensions,
 } from "react-native";
 import { TryContext } from "../../../context/tryoutCont";
-import { DataStore } from "aws-amplify";
+import { DataStore, Auth } from "aws-amplify";
 import { Product, Category } from "../../../models";
 import GptRequester from "../gptRequester";
 import LocationPicker from "../../../components/LocationPicker";
@@ -32,6 +32,7 @@ const AddInitDataComp = ({ onNextPage, onPrevPage }: AddInitDataProps) => {
     category,
     subcategory,
     imageUrls,
+    location,
   } = useContext(TryContext);
 
   const [tempDescription, setTempDescription] = useState("");
@@ -40,7 +41,8 @@ const AddInitDataComp = ({ onNextPage, onPrevPage }: AddInitDataProps) => {
   const handleCreateProduct = async () => {
     try {
       const categoryObject = await DataStore.query(Category, category);
-
+      const userData = await Auth.currentAuthenticatedUser();
+      const userId = userData.attributes.sub;
       const now = new Date();
       const createdAt = now.toISOString();
       const updatedAt = now.toISOString();
@@ -51,9 +53,9 @@ const AddInitDataComp = ({ onNextPage, onPrevPage }: AddInitDataProps) => {
           description: tempDescription, // Use the temporary description
           price: parseFloat(price),
           category: categoryObject,
-          Subcategories: [],
           city: "default",
           images: imageUrls,
+          userId: userId,
         })
       );
 
@@ -115,8 +117,7 @@ const AddInitDataComp = ({ onNextPage, onPrevPage }: AddInitDataProps) => {
             </TouchableOpacity>
           </View>
         </View>
-
-        {shouldCallGptRequester && <GptRequester desc={tempDescription} />}
+        {/* {shouldCallGptRequester && <GptRequester desc={tempDescription} />} */}
       </View>
     </ScrollView>
   );

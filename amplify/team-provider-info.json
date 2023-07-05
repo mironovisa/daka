@@ -24,6 +24,21 @@
       },
       "hosting": {
         "S3AndCloudFront": {}
+      },
+      "notifications": {
+        "Pinpoint": {
+          "Name": "daka-dev",
+          "Id": "1710f5a0fd344d348a045ece113b91f5",
+          "Region": "eu-central-1"
+        }
+      },
+      "analytics": {
+        "Pinpoint": {
+          "Name": "daka-dev",
+          "Id": "1710f5a0fd344d348a045ece113b91f5",
+          "Region": "eu-central-1"
+        },
+        "daka": {}
       }
     }
   }

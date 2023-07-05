@@ -1,22 +1,29 @@
-import React from 'react';
-import { createStackNavigator, StackHeaderHidden } from '@react-navigation/stack';
-import HomeScreen from '../screens/HomeScreen';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { TouchableOpacity, Dimensions } from 'react-native';
-import { TextInput, Text, View, TouchableWithoutFeedback } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
-import CategoryFilterScreen from '../screens/CategoryFilterScreen';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { getFocusedRouteNameFromRoute, useNavigation } from '@react-navigation/native';
-import ProducDetailsScreen from '../screens/ProductDetailsScreen';
-import { Feather } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
-import { EvilIcons } from '@expo/vector-icons';
-import OtherUserProfile from "../screens/OtherUserProfileScreen"
+import React from "react";
+import {
+  createStackNavigator,
+  StackHeaderHidden,
+} from "@react-navigation/stack";
+import HomeScreen from "../screens/HomeScreen";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { TouchableOpacity, Dimensions } from "react-native";
+import { TextInput, Text, View, TouchableWithoutFeedback } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import CategoryFilterScreen from "../screens/CategoryFilterScreen";
+import { FontAwesome5 } from "@expo/vector-icons";
+import {
+  getFocusedRouteNameFromRoute,
+  useNavigation,
+} from "@react-navigation/native";
+import ProducDetailsScreen from "../screens/ProductDetailsScreen";
+import { Feather } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
+import { EvilIcons } from "@expo/vector-icons";
+import OtherUserProfile from "../screens/OtherUserProfileScreen";
+import ChatScreen from "../screens/ChatScreen";
 
 const Stack = createStackNavigator();
-const { height, width } = Dimensions.get('window');
+const { height, width } = Dimensions.get("window");
 
 const MainHeaderComponent = ({ isMainPage = true }) => {
   const navigation = useNavigation();
@@ -27,31 +34,31 @@ const MainHeaderComponent = ({ isMainPage = true }) => {
   return (
     <SafeAreaView
       style={{
-        flexDirection: 'row',
-        alignItems: 'center',
+        flexDirection: "row",
+        alignItems: "center",
         marginBottom: 4,
-        justifyContent: 'center',
-        backgroundColor: 'white',
+        justifyContent: "center",
+        backgroundColor: "white",
         height: height * 0.12, // Adjust the height here
       }}
-      edges={['top', 'left', 'right']}
+      edges={["top", "left", "right"]}
     >
       <View
         style={{
           flex: 1,
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: '#e5e5e5',
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#e5e5e5",
         }}
       >
-        {!isMainPage?(
+        {!isMainPage ? (
           <TouchableOpacity
             style={{
-              backgroundColor: '#e5e5e5',
-              justifyContent: 'center',
-              alignContent: 'center',
-              alignItems: 'center',
+              backgroundColor: "#e5e5e5",
+              justifyContent: "center",
+              alignContent: "center",
+              alignItems: "center",
               paddingLeft: 5,
               paddingRight: 5,
             }}
@@ -59,9 +66,14 @@ const MainHeaderComponent = ({ isMainPage = true }) => {
           >
             <Ionicons name="arrow-back" size={24} color="darkgrey" />
           </TouchableOpacity>
-        ):null}
+        ) : null}
 
-        <Ionicons name="search" size={24} color="darkgrey" style={{ padding: 10 }} />
+        <Ionicons
+          name="search"
+          size={24}
+          color="darkgrey"
+          style={{ padding: 10 }}
+        />
         <TextInput
           placeholder="Search..."
           style={{
@@ -70,20 +82,24 @@ const MainHeaderComponent = ({ isMainPage = true }) => {
             paddingRight: 10,
             paddingBottom: 10,
             paddingLeft: 0,
-            backgroundColor: '#e5e5e5',
-            color: '#424242',
+            backgroundColor: "#e5e5e5",
+            color: "#424242",
           }}
           returnKeyType="search"
         />
         <TouchableOpacity
           style={{
-            backgroundColor: '#e5e5e5',
-            alignItems: 'center',
-            justifyContent: 'center',
+            backgroundColor: "#e5e5e5",
+            alignItems: "center",
+            justifyContent: "center",
             padding: 10,
           }}
         >
-          <MaterialIcons name="settings-applications" size={28} color="#97B858" />
+          <MaterialIcons
+            name="settings-applications"
+            size={28}
+            color="#97B858"
+          />
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -91,8 +107,8 @@ const MainHeaderComponent = ({ isMainPage = true }) => {
 };
 
 function MyStack({ navigation, route }) {
-  const tabHiddenRoutes = ["ProductDetails"]
-  
+  const tabHiddenRoutes = ["ProductDetails"];
+
   // React.useLayoutEffect(() => {
   //   const routeName = getFocusedRouteNameFromRoute(route);
   //   if (tabHiddenRoutes.includes(routeName)) {
@@ -101,7 +117,6 @@ function MyStack({ navigation, route }) {
   //     navigation.setOptions({tabBarStyle:{display: "true"}})
   //   }
   // }, [navigation, route])
-
 
   const handlePress = () => {
     navigation.goBack();
@@ -112,18 +127,25 @@ function MyStack({ navigation, route }) {
       <Stack.Screen
         name="MainHome"
         component={HomeScreen}
-        options={{ header: () => <MainHeaderComponent handlePress={handlePress} /> }}
+        options={{
+          header: () => <MainHeaderComponent handlePress={handlePress} />,
+        }}
       />
       <Stack.Screen
         name="ProductDetails"
         component={ProducDetailsScreen}
         options={({ route }) => ({
-          title: '',
+          title: "",
           headerRight: () => (
-            <View style={{ flexDirection: 'row', marginRight: 15 }}>
+            <View style={{ flexDirection: "row", marginRight: 15 }}>
               <View>
                 <TouchableOpacity onPress={handlePress}>
-                  <Feather name="heart" size={21} color="black" style={{ marginRight: 15 }} />
+                  <Feather
+                    name="heart"
+                    size={21}
+                    color="black"
+                    style={{ marginRight: 15 }}
+                  />
                 </TouchableOpacity>
               </View>
               <View>
@@ -145,17 +167,26 @@ function MyStack({ navigation, route }) {
       <Stack.Screen
         name="CategoryFiltering"
         component={CategoryFilterScreen}
-        options={{ header: () => <MainHeaderComponent isMainPage={false} handlePress={handlePress} /> }}
-      /><Stack.Screen
-      name="OtherUsersProfile"
-      component={OtherUserProfile}
-      options={{ header: () => <MainHeaderComponent isMainPage={false} handlePress={handlePress} /> }}
-    />
+        options={{
+          header: () => (
+            <MainHeaderComponent isMainPage={false} handlePress={handlePress} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="OtherUsersProfile"
+        component={OtherUserProfile}
+        options={{
+          header: () => (
+            <MainHeaderComponent isMainPage={false} handlePress={handlePress} />
+          ),
+        }}
+      />
+      <Stack.Screen name="ChatScreen" component={ChatScreen} />
     </Stack.Navigator>
   );
 }
 
-export default function HomeNavigator({ navigation, route })
-{
-  return <MyStack navigation={navigation} route={route}/>
+export default function HomeNavigator({ navigation, route }) {
+  return <MyStack navigation={navigation} route={route} />;
 }

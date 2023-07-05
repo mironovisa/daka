@@ -1,4 +1,4 @@
-import React, { createContext, useState, ReactNode } from 'react';
+import React, { createContext, useState, ReactNode } from "react";
 
 interface TryContextProps {
   value: string;
@@ -17,6 +17,8 @@ interface TryContextProps {
   setPrice: React.Dispatch<React.SetStateAction<string>>;
   imageUrls: string[];
   setImageUrls: React.Dispatch<React.SetStateAction<string[]>>;
+  location: number[];
+  setLocation: React.Dispatch<React.SetStateAction<number[]>>;
   handleImageUriAdd: (uri: string) => void;
 }
 
@@ -25,34 +27,39 @@ interface TryContextProviderProps {
 }
 
 export const TryContext = createContext<TryContextProps>({
-  value: '',
+  value: "",
   setValue: () => {},
-  userSub: '',
+  userSub: "",
   setUserSub: () => {},
-  category: '',
+  category: "",
   setCategory: () => {},
-  subcategory: '',
+  subcategory: "",
   setSubcategory: () => {},
-  name: '',
+  name: "",
   setName: () => {},
-  description: '',
+  description: "",
   setDescription: () => {},
-  price: '',
+  price: "",
   setPrice: () => {},
   imageUrls: [],
   setImageUrls: () => {},
+  location: [],
+  setLocation: () => {},
   handleImageUriAdd: () => {},
 });
 
-export const TryContextProvider: React.FC<TryContextProviderProps> = ({ children }) => {
-  const [myValue, setMyValue] = useState<string>('');
-  const [userSub, setUserSub] = useState<string>('');
-  const [category, setCategory] = useState<string>('');
-  const [subcategory, setSubcategory] = useState<string>('');
-  const [name, setName] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
-  const [price, setPrice] = useState<string>('');
+export const TryContextProvider: React.FC<TryContextProviderProps> = ({
+  children,
+}) => {
+  const [myValue, setMyValue] = useState<string>("");
+  const [userSub, setUserSub] = useState<string>("");
+  const [category, setCategory] = useState<string>("");
+  const [subcategory, setSubcategory] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [price, setPrice] = useState<string>("");
   const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [location, setLocation] = useState<string[]>([]);
 
   const updateValue = (newValue: string) => {
     setMyValue(newValue);
@@ -74,6 +81,10 @@ export const TryContextProvider: React.FC<TryContextProviderProps> = ({ children
     setImageUrls((prevUrls) => [...prevUrls, uri]);
   };
 
+  const handleLocationUpdate = (newLocation: string[]) => {
+    setLocation(newLocation);
+  };
+
   return (
     <TryContext.Provider
       value={{
@@ -93,6 +104,8 @@ export const TryContextProvider: React.FC<TryContextProviderProps> = ({ children
         setPrice,
         imageUrls,
         setImageUrls,
+        location,
+        setLocation: handleLocationUpdate,
         handleImageUriAdd,
       }}
     >

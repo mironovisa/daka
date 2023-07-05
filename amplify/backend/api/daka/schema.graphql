@@ -1,13 +1,23 @@
+type Chat @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  sellerId: String
+  buyerId: String
+  productId: String
+  messages: [Message] @hasMany(indexName: "byChat", fields: ["id"])
+}
+
 type Subcategory @model @auth(rules: [{allow: public}]) {
   id: ID!
   Categories: [Category] @manyToMany(relationName: "SubcategoryCategory")
   name: String
-  products: [Product] @manyToMany(relationName: "ProductSubcategory")
 }
 
 type User @model @auth(rules: [{allow: public}]) {
   id: ID!
-  name: String!
+  userSub: String
+  language: String
+  lastSeen: AWSDate
+  userName: String
 }
 
 type Product @model @auth(rules: [{allow: public}]) {
@@ -20,7 +30,6 @@ type Product @model @auth(rules: [{allow: public}]) {
   city: String
   isPaid: Boolean
   userId: ID
-  Subcategories: [Subcategory] @manyToMany(relationName: "ProductSubcategory")
   images: [String!]
 }
 
@@ -41,10 +50,8 @@ type FavoriteProduct @model @auth(rules: [{allow: public}]) {
 
 type Message @model @auth(rules: [{allow: public}]) {
   id: ID!
-  image: String!
-  productName: String!
-  sellerName: String!
-  situation: String!
+  userId: String!
   date: String!
+  chatID: ID! @index(name: "byChat")
 }
  

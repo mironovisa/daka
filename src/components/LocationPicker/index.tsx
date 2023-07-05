@@ -1,14 +1,47 @@
-import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import React, { useState, useEffect, useContext } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  Dimensions,
+} from "react-native";
 import {
   getCurrentPositionAsync,
   useForegroundPermissions,
   PermissionStatus,
 } from "expo-location";
+import MapView, { Marker } from "react-native-maps";
+import { TryContext } from "../../context/tryoutCont";
+
+const { height, width } = Dimensions.get("screen");
+const MapPreview = ({ lat, lng }) => {
+  const [region, setRegion] = useState({
+    latitude: lat,
+    longitude: lng,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  });
+
+  useEffect(() => {
+    console.log("Fetching map preview");
+  }, []);
+
+  return (
+    <View style={styles.mapPreview}>
+      <MapView style={styles.map} region={region}>
+        <Marker coordinate={{ latitude: lat, longitude: lng }} />
+      </MapView>
+    </View>
+  );
+};
 
 const Index = () => {
   const [locationPermissionInformation, requestPermission] =
     useForegroundPermissions();
+  const [haveLocation, setHaveLocation] = useState(null);
+  const { setLocation } = useContext(TryContext);
 
   async function verifyPermissions() {
     if (
@@ -36,7 +69,16 @@ const Index = () => {
     }
 
     const location = await getCurrentPositionAsync();
-    console.log(location);
+    setHaveLocation({
+      lat: location.coords.latitude,
+      lng: location.coords.longitude,
+    });
+    setLocation([location.coords.latitude, location.coords.longitude]);
+    console.log(
+      "User location:",
+      location.coords.latitude,
+      location.coords.longitude
+    );
   }
 
   function pickOnMapHandler() {
@@ -45,7 +87,9 @@ const Index = () => {
 
   return (
     <View>
-      <View style={styles.mapPreview}></View>
+      {haveLocation && (
+        <MapPreview lat={haveLocation.lat} lng={haveLocation.lng} />
+      )}
       <View style={styles.actions}>
         <TouchableOpacity onPress={getLocationHandler}>
           <Text>Find by GPS</Text>
@@ -69,6 +113,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "transparent",
     borderRadius: 4,
+  },
+  map: {
+    width: width * 0.9,
+    height: 200,
   },
   actions: {
     flexDirection: "row",

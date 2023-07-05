@@ -4,6 +4,7 @@ import {
   View,
   Platform,
   TouchableOpacity,
+  FlatList,
   Text,
   Dimensions,
   StyleSheet,
@@ -15,11 +16,10 @@ import { TryContext } from "../../context/tryoutCont";
 import ImagePickerModal from "./modal";
 import { fetchImage } from "./functions";
 import { AntDesign } from "@expo/vector-icons";
-import DraggableFlatList from "react-native-draggable-flatlist";
 import ImagePile from "./imagePile";
-import addPhoto from "../../../assets/addPhoto.png";
+import ListFooter from "./listFooterComp";
+import DraggableFlatList from "react-native-draggable-flatlist";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
 
 Amplify.configure(awsconfig);
 
@@ -29,21 +29,26 @@ interface ImagePickerProps {
   onNextPage: () => void;
   onPrevPage: () => void;
 }
-const ImagePickerExample = ({ onNextPage, onPrevPage }: ImagePickerProps) => {
+
+function ImagePickerExample({ onNextPage, onPrevPage }: ImagePickerProps) {
   const [modalVisible, setModalVisible] = useState(false);
-  const [images, setImages] = useState([]);
-  const [mainImageIndex, setMainImageIndex] = useState(0);
+  const [image, setImage] = useState([]);
+  const [imageAsset, setImageAsset] = useState([]);
   const { setImageUrls } = useContext(TryContext);
 
   const deleteByValue = (value) => {
-    setImages((oldImages) => {
-      return oldImages.filter((img) => img !== value);
+    setImage((oldValues) => {
+      return oldValues.filter((img) => img !== value);
+    });
+
+    setImageAsset((oldAssets) => {
+      return oldAssets.filter((asset) => asset.uri !== value);
     });
   };
 
   useEffect(() => {
-    console.log(images);
-  }, [images]);
+    console.log(imageAsset);
+  }, [imageAsset]);
 
   const uploadFile = async (file) => {
     const img = await fetchImage(file.uri);
@@ -76,6 +81,13 @@ const ImagePickerExample = ({ onNextPage, onPrevPage }: ImagePickerProps) => {
     setModalVisible(!modalVisible);
   };
 
+  const reorderImages = (data) => {
+    setImage(data);
+
+    const newImageAssets = data.map((item) => item.asset);
+    setImageAsset(newImageAssets);
+  };
+
   const handlePickImage = async (mediaType) => {
     showModal();
 
@@ -97,19 +109,20 @@ const ImagePickerExample = ({ onNextPage, onPrevPage }: ImagePickerProps) => {
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsMultipleSelection: true,
         aspect: [4, 3],
-        selectionLimit: 5 - images.length, // Set the selection limit based on the remaining slots
+        selectionLimit: 5 - image.length, // Set the selection limit based on the remaining slots
         quality: 0,
       });
     }
 
-    if (!result.cancelled) {
+    if (!result.canceled) {
       const newImages = result.assets.map((asset) => asset.uri);
-      setImages((prev) => [...prev, ...newImages]);
+      setImage((prev) => [...prev, ...newImages]);
+      setImageAsset((prev) => [...prev, ...result.assets]);
     }
   };
 
   const handleNextButton = async () => {
-    for (const asset of images) {
+    for (const asset of imageAsset) {
       try {
         await uploadFile(asset);
       } catch (error) {
@@ -120,21 +133,45 @@ const ImagePickerExample = ({ onNextPage, onPrevPage }: ImagePickerProps) => {
     onNextPage();
   };
 
-  const isButtonDisabled = images.length <= 0;
-
-  const setMainImage = (index) => {
-    setMainImageIndex(index);
-  };
+  const isButtonDisabled = image.length <= 0;
+  const shouldShowListFooter = imageAsset.length <= 5;
 
   return (
     <View style={styles.container}>
-      {images.length === 0 && (
-        <View>
-          <TouchableOpacity onPress={showModal}>
-            <Image source={addPhoto} style={styles.addPhotoCont} />
-          </TouchableOpacity>
-        </View>
-      )}
+      <View>
+        {isButtonDisabled && (
+          <View
+            style={{
+              marginTop: 1100,
+              padding: 50,
+            }}
+          >
+            <ListFooter onPressA={showModal} />
+            <View style={{ marginTop: 15 }}>
+              <Text
+                style={{ fontSize: 20, fontWeight: "bold", marginBottom: 5 }}
+              >
+                Please, add a photo:
+              </Text>
+              <Text style={{ fontSize: 15, marginBottom: 20 }}>
+                That would be really great if you choose a good photo in order
+                to show your item in the best way.
+              </Text>
+              <Text
+                style={{ fontSize: 15, fontWeight: "bold", marginBottom: 20 }}
+              >
+                Try following this rules:
+              </Text>
+              <Text style={{ fontSize: 15, marginBottom: 10 }}>
+                - Take photo so that the item would be in the focus area
+              </Text>
+              <Text style={{ fontSize: 15, marginBottom: 10 }}>
+                - Avoid showing too many unrelate items around the main item
+              </Text>
+            </View>
+          </View>
+        )}
+      </View>
       <ImagePickerModal
         isVisible={modalVisible}
         onClose={() => setModalVisible(false)}
@@ -148,54 +185,30 @@ const ImagePickerExample = ({ onNextPage, onPrevPage }: ImagePickerProps) => {
         }}
       />
 
-      {images.length === 0 && (
-        <View style={styles.noticeContainer}>
-          <View style={styles.notice}>
-            <MaterialIcons
-              name="notification-important"
-              size={24}
-              color="black"
-            />
-            <View style={styles.noticeText}>
-              <Text numberOfLines={3} ellipsizeMode="clip">
-                Please, choose at least one image. Maximum of 5 images is
-                allowed.
-              </Text>
-            </View>
-          </View>
-          <View style={styles.noticeTwo}>
-            <Entypo name="light-bulb" size={24} color="black" />
-            <View style={styles.noticeText}>
-              <Text
-                style={styles.noticeDescription}
-                numberOfLines={3}
-                ellipsizeMode="clip"
-              >
-                It would be wonderful for other users to see good quality images
-                that show what you sell in the best way!
-              </Text>
-            </View>
-          </View>
-        </View>
-      )}
-
-      <View style={styles.grid}>
-        {images.map((item, index) => (
-          <ImagePile key={index} img={item} deleteByValue={deleteByValue} />
-        ))}
+      <View>
+        <DraggableFlatList
+          data={image.map((img, index) => ({ id: index.toString(), uri: img }))}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          renderItem={({ item }) => (
+            <ImagePile img={item.uri} deleteByValue={deleteByValue} />
+          )}
+          onDragEnd={({ data }) => reorderImages(data)}
+        />
       </View>
-
       <View style={styles.bottomButtonsContainer}>
         <View style={styles.button}>
           <TouchableOpacity onPress={onPrevPage}>
-            <View style={styles.buttonInnerContainer}>
-              <View style={styles.buttonIconContainer}>
-                <AntDesign name="arrowleft" size={20} color="black" />
-              </View>
-              <Text style={styles.buttonText}>Back</Text>
-            </View>
+            <Text style={styles.buttonText}>Back</Text>
           </TouchableOpacity>
         </View>
+        {!isButtonDisabled && (
+          <View style={styles.button}>
+            <TouchableOpacity onPress={showModal}>
+              <MaterialIcons name="add-a-photo" size={24} color="white" />
+            </TouchableOpacity>
+          </View>
+        )}
         <View
           style={[
             styles.button,
@@ -206,93 +219,84 @@ const ImagePickerExample = ({ onNextPage, onPrevPage }: ImagePickerProps) => {
             onPress={handleNextButton}
             disabled={isButtonDisabled}
           >
-            <View style={styles.buttonInnerContainer}>
-              <Text style={styles.buttonText}>Next</Text>
-              <View style={styles.buttonIconContainer}>
-                <AntDesign name="arrowright" size={20} color="black" />
-              </View>
-            </View>
+            <Text style={styles.buttonText}>Next</Text>
           </TouchableOpacity>
         </View>
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: "center",
     justifyContent: "center",
   },
-  noticeContainer: {
-    width: width,
+  scrollView: {
+    height: height * 0.3,
   },
-  notice: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "darkorange",
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-  },
-  noticeText: {
+  imageContainer: {
     flex: 1,
-    marginLeft: 10,
-  },
-  noticeDescription: {
-    marginTop: 10,
-  },
-  noticeTwo: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "lightgreen",
-    borderRadius: 5,
-    padding: 5,
-    marginBottom: 10,
-  },
-
-  addPhotoCont: {
-    width: 200,
-    height: 200,
-  },
-  grid: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    marginBottom: 20,
+    paddingTop: 10,
+  },
+  image: {
+    height: height * 0.5,
+    width: (width - 20) / 2,
+    resizeMode: "cover",
+  },
+  imageInfoContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  imageInfo: {
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    padding: 5,
+    borderRadius: 5,
+    flexDirection: "row",
+  },
+  imageInfoText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+  actionButtonsContainer: {
+    flexDirection: "row",
+  },
+  addButton: {
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    borderRadius: 5,
+    width: 30,
+    height: 30,
+    alignItems: "center",
+    justifyContent: "center",
   },
   bottomButtonsContainer: {
     position: "absolute",
     bottom: 30,
-    flexDirection: "row",
     justifyContent: "space-between",
-    width: "100%",
+    flexDirection: "row",
+    width: width,
   },
   button: {
-    backgroundColor: "white",
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    borderWidth: 2,
-    borderColor: "gray",
+    marginHorizontal: 10,
+    backgroundColor: "#4f992e",
+    padding: 15,
+    borderRadius: 15,
+    width: 100,
     alignItems: "center",
-    justifyContent: "center",
-    opacity: 0.9,
-  },
-  buttonInnerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  buttonIconContainer: {
-    paddingRight: 5,
   },
   buttonText: {
-    fontSize: 20,
-    color: "black",
+    fontSize: 18,
+    color: "white",
   },
   buttonContainerDisabled: {
     opacity: 0.5,
+  },
+  listFooterContainer: {
+    position: "absolute",
+    right: 10,
   },
 });
 

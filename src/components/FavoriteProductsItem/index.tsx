@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { Product } from '../../models';
-import { View, TouchableOpacity, Text, Image } from 'react-native';
-import styles from './styles';
-import { Feather } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import { Auth, DataStore } from 'aws-amplify';
-import { FavoriteProduct } from '../../models';
+import React, { useState } from "react";
+import { Product } from "../../models";
+import { View, TouchableOpacity, Text, Image } from "react-native";
+import styles from "./styles";
+import { Feather } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { Auth, DataStore } from "aws-amplify";
+import { FavoriteProduct } from "../../models";
 
 type productProps = {
   product: Product;
@@ -14,10 +14,10 @@ type productProps = {
 };
 
 const index = ({ product }: productProps) => {
-    if (!product) {
-        // Handle the case when product is null or undefined
-        return null; // or render an error message or loading state
-      }
+  if (!product) {
+    // Handle the case when product is null or undefined
+    return null; // or render an error message or loading state
+  }
   const [like, setLike] = useState(false);
   const navigation = useNavigation();
   const handleLike = () => {
@@ -25,7 +25,7 @@ const index = ({ product }: productProps) => {
   };
   const addToCart = async () => {
     const userData = await Auth.currentAuthenticatedUser();
-    console.log('UserData', userData);
+    console.log("UserData", userData);
     if (!userData) return;
     const newFavoriteProduct = new FavoriteProduct({
       userSub: userData.attributes.sub,
@@ -35,21 +35,36 @@ const index = ({ product }: productProps) => {
   };
 
   // Format the createdAt value
-  const formattedDate = new Date(product.createdAt).toLocaleDateString('en-US', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
-  const createdAt = formattedDate.split(' ').join(' ');
+  const formattedDate = new Date(product.createdAt).toLocaleDateString(
+    "en-US",
+    {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }
+  );
+  const createdAt = formattedDate.split(" ").join(" ");
 
   const cityText =
     product.city.length > 8 ? `${product.city.slice(0, 7)}...` : product.city;
   return (
-    <TouchableOpacity style={styles.favorite}>
+    <TouchableOpacity
+      style={styles.favorite}
+      onPress={() => navigation.navigate("ProductDetails", { id: product.id })}
+    >
       <View style={styles.favoriteView}>
-        <Image source={{ uri: product.images[0] }} resizeMode="cover" style={styles.favoriteImage} />
         <View>
-          <Text style={styles.productName} numberOfLines={2} ellipsizeMode="tail">
+          <Image
+            source={{ uri: product.images[0] }}
+            resizeMode="cover"
+            style={styles.favoriteImage}
+            key={product.id}
+          />
+          <Text
+            style={styles.productName}
+            numberOfLines={2}
+            ellipsizeMode="tail"
+          >
             {product.name}
           </Text>
         </View>
