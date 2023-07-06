@@ -5,6 +5,8 @@ interface TryContextProps {
   setValue: React.Dispatch<React.SetStateAction<string>>;
   userSub: string;
   setUserSub: React.Dispatch<React.SetStateAction<string>>;
+  categories: string[];
+  setCategories: React.Dispatch<React.SetStateAction<string[]>>;
   category: string;
   setCategory: React.Dispatch<React.SetStateAction<string>>;
   subcategory: string;
@@ -17,8 +19,6 @@ interface TryContextProps {
   setPrice: React.Dispatch<React.SetStateAction<string>>;
   imageUrls: string[];
   setImageUrls: React.Dispatch<React.SetStateAction<string[]>>;
-  location: number[];
-  setLocation: React.Dispatch<React.SetStateAction<number[]>>;
   handleImageUriAdd: (uri: string) => void;
 }
 
@@ -31,6 +31,8 @@ export const TryContext = createContext<TryContextProps>({
   setValue: () => {},
   userSub: "",
   setUserSub: () => {},
+  categories: [],
+  setCategories: () => {},
   category: "",
   setCategory: () => {},
   subcategory: "",
@@ -43,8 +45,6 @@ export const TryContext = createContext<TryContextProps>({
   setPrice: () => {},
   imageUrls: [],
   setImageUrls: () => {},
-  location: [],
-  setLocation: () => {},
   handleImageUriAdd: () => {},
 });
 
@@ -53,13 +53,13 @@ export const TryContextProvider: React.FC<TryContextProviderProps> = ({
 }) => {
   const [myValue, setMyValue] = useState<string>("");
   const [userSub, setUserSub] = useState<string>("");
+  const [categories, setCategories] = useState<string[]>([]);
   const [category, setCategory] = useState<string>("");
   const [subcategory, setSubcategory] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [price, setPrice] = useState<string>("");
   const [imageUrls, setImageUrls] = useState<string[]>([]);
-  const [location, setLocation] = useState<string[]>([]);
 
   const updateValue = (newValue: string) => {
     setMyValue(newValue);
@@ -81,10 +81,6 @@ export const TryContextProvider: React.FC<TryContextProviderProps> = ({
     setImageUrls((prevUrls) => [...prevUrls, uri]);
   };
 
-  const handleLocationUpdate = (newLocation: string[]) => {
-    setLocation(newLocation);
-  };
-
   return (
     <TryContext.Provider
       value={{
@@ -92,6 +88,8 @@ export const TryContextProvider: React.FC<TryContextProviderProps> = ({
         setValue: updateValue,
         userSub,
         setUserSub: writeUserSub,
+        categories,
+        setCategories,
         category,
         setCategory: handleChooseCategory,
         subcategory,
@@ -104,8 +102,6 @@ export const TryContextProvider: React.FC<TryContextProviderProps> = ({
         setPrice,
         imageUrls,
         setImageUrls,
-        location,
-        setLocation: handleLocationUpdate,
         handleImageUriAdd,
       }}
     >

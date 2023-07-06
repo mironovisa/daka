@@ -44,7 +44,9 @@
     "hostedUIDomainName": "dakaedfd39d2-edfd39d2",
     "authProvidersUserPool": [],
     "hostedUIProviderMeta": "[]",
-    "userPoolGroupList": [],
+    "userPoolGroupList": [
+      "owner"
+    ],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
     "useEnabledMfas": true,

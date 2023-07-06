@@ -34,38 +34,38 @@ const HomeScreen = () => {
     }
   };
 
-  const mainUserFindId = async () => {
-    try {
-      const userData = await Auth.currentAuthenticatedUser();
-      const userSub = userData.attributes.sub;
-      const existingUser = await DataStore.query(User, (u) =>
-        u.userSub("eq", userSub)
-      );
-      if (existingUser.length > 0) {
-        // Update lastSeen field
-        const user = existingUser[0];
-        user.lastSeen = new Date();
-        await DataStore.save(user);
-      } else {
-        // Create new User
-        const temporaryId = Math.random().toString();
-        const language = "en"; // Replace with your logic to get the language from context
-        const newUser = new User({
-          userSub: userSub,
-          temporaryId: temporaryId,
-          lastSeen: new Date(),
-          language: language,
-        });
-        await DataStore.save(newUser);
-      }
-    } catch (error) {
-      console.log("Error finding or creating user:", error);
-    }
-  };
+  // const mainUserFindId = async () => {
+  //   try {
+  //     const userData = await Auth.currentAuthenticatedUser();
+  //     const userSub = userData.attributes.sub;
+  //     const existingUser = await DataStore.query(User, (u) =>
+  //       u.userSub("eq", userSub)
+  //     );
+  //     if (existingUser.length > 0) {
+  //       // Update lastSeen field
+  //       const user = existingUser[0];
+  //       user.lastSeen = new Date();
+  //       await DataStore.save(user);
+  //     } else {
+  //       // Create new User
+  //       const temporaryId = Math.random().toString();
+  //       const language = "en"; // Replace with your logic to get the language from context
+  //       const newUser = new User({
+  //         userSub: userSub,
+  //         tempId: temporaryId,
+  //         lastSeen: new Date().toISOString(),
+  //         language: language,
+  //       });
+  //       await DataStore.save(newUser);
+  //     }
+  //   } catch (error) {
+  //     console.log("Error finding or creating user:", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    mainUserFindId();
-  }, []);
+  // useEffect(() => {
+  //   mainUserFindId();
+  // }, []);
 
   useEffect(() => {
     setIsLoading(true);

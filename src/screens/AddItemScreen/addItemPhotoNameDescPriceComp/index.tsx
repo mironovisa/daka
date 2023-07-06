@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { TryContext } from "../../../context/tryoutCont";
 import { DataStore, Auth } from "aws-amplify";
-import { Product, Category } from "../../../models";
+import { Product, Category, ProductCategories } from "../../../models";
 import GptRequester from "../gptRequester";
 import LocationPicker from "../../../components/LocationPicker";
 
@@ -23,49 +23,44 @@ interface AddInitDataProps {
 }
 
 const AddInitDataComp = ({ onNextPage, onPrevPage }: AddInitDataProps) => {
-  const {
-    userSub,
-    name,
-    setName,
-    price,
-    setPrice,
-    category,
-    subcategory,
-    imageUrls,
-    location,
-  } = useContext(TryContext);
+  const { name, setName, price, setPrice, categories, imageUrls } =
+    useContext(TryContext);
 
   const [tempDescription, setTempDescription] = useState("");
   const [shouldCallGptRequester, setShouldCallGptRequester] = useState(false);
 
   const handleCreateProduct = async () => {
     try {
-      const categoryObject = await DataStore.query(Category, category);
       const userData = await Auth.currentAuthenticatedUser();
       const userId = userData.attributes.sub;
-      const now = new Date();
-      const createdAt = now.toISOString();
-      const updatedAt = now.toISOString();
-
       const product = await DataStore.save(
         new Product({
           name,
           description: tempDescription, // Use the temporary description
           price: parseFloat(price),
-          category: categoryObject,
           city: "default",
           images: imageUrls,
-          userId: userId,
+          userSub: userId,
         })
       );
-
+  
       console.log("Product created:", product);
-      setShouldCallGptRequester(true); // Set the flag to call GptRequester
+  
+      // Create the product categories using DataStore.mutate
+      for (const categoryId of categories) {
+        const productCategory = await DataStore.save(
+          new ProductCategories({
+            categoryId,
+            productId: product.id,
+          })
+        );
+        console.log("Product category created:", productCategory);
+      }
     } catch (error) {
       console.log("Error creating product:", error);
     }
   };
-
+  
   return (
     <ScrollView>
       <View style={styles.container}>

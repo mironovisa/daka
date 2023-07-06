@@ -1,57 +1,22 @@
-type Chat @model @auth(rules: [{allow: public}]) {
+type Category @model @auth(rules: [{ allow: public }]) {
   id: ID!
-  sellerId: String
-  buyerId: String
-  productId: String
-  messages: [Message] @hasMany(indexName: "byChat", fields: ["id"])
-}
-
-type Subcategory @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  Categories: [Category] @manyToMany(relationName: "SubcategoryCategory")
   name: String
+  products: [Product] @manyToMany(relationName: "ProductCategories")
 }
 
-type User @model @auth(rules: [{allow: public}]) {
+type Product @model @auth(rules: [{ allow: public }]) {
   id: ID!
-  userSub: String
-  language: String
-  lastSeen: AWSDate
-  userName: String
-}
-
-type Product @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  price: Float!
-  isFeatured: Boolean
-  name: String!
-  description: String!
-  category: Category @belongsTo
+  name: String
+  description: String
   city: String
-  isPaid: Boolean
-  userId: ID
-  images: [String!]
+  price: Float
+  images: [String]
+  userSub: String
+  categories: [Category] @manyToMany(relationName: "ProductCategories")
 }
 
-type Category @model @auth(rules: [{allow: public}]) {
+type Message @model @auth(rules: [{ allow: public }]) {
   id: ID!
-  name: String!
-  src: String!
-  products: [Product] @hasMany
-  subcategorys: [Subcategory] @manyToMany(relationName: "SubcategoryCategory")
+  owner: String!
+  message: String!
 }
-
-type FavoriteProduct @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  userSub: String!
-  productID: ID!
-  product: Product @hasOne
-}
-
-type Message @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  userId: String!
-  date: String!
-  chatID: ID! @index(name: "byChat")
-}
- 

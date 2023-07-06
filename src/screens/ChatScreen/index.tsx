@@ -1,122 +1,60 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { GiftedChat } from "react-native-gifted-chat";
-import { View, Text } from "react-native";
-import { Auth, DataStore } from "aws-amplify";
-import { Chat, Message } from "../../models";
-import axios from "axios";
+import { DataStore, Auth } from "aws-amplify";
+import { Message } from "../../models";
 
-const API_KEY = "1f0300778amsh802b70dda94c401p173641jsn7206c852587f";
-
-function ChatScreen({ route }) {
-  const userId = route.params;
+function Example() {
   const [messages, setMessages] = useState([]);
-  const [userTwoId, setUserTwoId] = useState(null);
-  const productTitle = "Sample Product"; // Replace with your actual product title
-
-  const mainUserFindId = async () => {
-    const userData = await Auth.currentAuthenticatedUser();
-    const fetchedUserTwoId = userData.attributes.sub;
-    console.log(fetchedUserTwoId);
-    setUserTwoId(fetchedUserTwoId);
-  };
 
   useEffect(() => {
-    mainUserFindId();
+    const fetchMessages = async () => {
+      try {
+        const messages = await DataStore.query(Message);
+        const formattedMessages = messages.map((message) => ({
+          _id: message.id,
+          text: message.message,
+          createdAt: new Date(), // Modify this based on your message's actual createdAt value
+          user: {
+            _id: message.owner,
+            name: message.owner, // Use an appropriate name for the user
+            avatar: "https://placeimg.com/140/140/any", // Replace with user avatar URL if available
+          },
+        }));
+        setMessages(formattedMessages);
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      }
+    };
+
+    fetchMessages();
   }, []);
 
-  useEffect(() => {
-    if (userTwoId) {
-      setMessages([
-        {
-          _id: userId.userId,
-          text: "Hello developer",
-          createdAt: new Date(),
-          user: {
-            _id: userTwoId,
-            name: "React Native",
-            avatar: "https://placeimg.com/140/140/any",
-          },
-        },
-      ]);
-      console.log(userId.userId, userTwoId);
-    }
-  }, [userTwoId]);
-
-  async function translateText(text, fromLanguage, toLanguage) {
-    const options = {
-      method: "GET",
-      url: "https://nlp-translation.p.rapidapi.com/v1/translate",
-      params: {
-        text,
-        to: toLanguage,
-        from: fromLanguage,
-      },
-      headers: {
-        "X-RapidAPI-Key": API_KEY,
-        "X-RapidAPI-Host": "nlp-translation.p.rapidapi.com",
-      },
+  const onSend = useCallback(async (messages = []) => {
+    const newMessage = messages[0];
+    const messageData = {
+      owner: (await Auth.currentAuthenticatedUser()).attributes.sub,
+      message: newMessage.text,
     };
 
     try {
-      const response = await axios.request(options);
-      return response.data.translated_text;
+      await DataStore.save(new Message(messageData));
+      setMessages((previousMessages) =>
+        GiftedChat.append(previousMessages, messages)
+      );
     } catch (error) {
-      console.error(error);
-      return null;
+      console.error("Error sending message:", error);
     }
-  }
-
-  async function onSend(newMessages) {
-    const translatedMessages = await Promise.all(
-      newMessages.map(async (message) => {
-        const translatedText = await translateText(message.text, 'en', 'ru');
-        let text = message.text; // Default to original text if translation fails
-  
-        if (typeof translatedText === 'object' && translatedText.hasOwnProperty('ru')) {
-          text = translatedText.ru;
-        }
-  
-        return {
-          ...message,
-          text,
-        };
-      })
-    );
-  
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, translatedMessages)
-    );
-  
-    const messagesToSave = translatedMessages.map((message) => ({
-      id: message._id,
-      userId: message.user._id,
-      date: message.createdAt.toISOString(),
-      chatID: Math.random(), // Provide the chat ID here
-    }));
-  
-    await Promise.all(
-      messagesToSave.map((message) => DataStore.save(new Message(message)))
-    );
-  }
-
-  function renderChatFooter() {
-    return (
-      <View style={{ padding: 10, backgroundColor: "#f0f0f0" }}>
-        <Text style={{ fontWeight: "bold" }}>{productTitle}</Text>
-      </View>
-    );
-  }
+  }, []);
 
   return (
     <GiftedChat
       messages={messages}
-      onSend={onSend}
+      onSend={(messages) => onSend(messages)}
       user={{
-        _id: userTwoId, // User ID
+        _id: "b324b852-0061-7087-b1d8-dc2943bd4f25", // Replace with the ID of the user on the second device
       }}
-      renderChatFooter={renderChatFooter}
     />
   );
 }
 
-export default ChatScreen;
+export default Example;

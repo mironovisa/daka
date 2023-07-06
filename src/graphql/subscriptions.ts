@@ -2,151 +2,21 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateProduct = /* GraphQL */ `
-  subscription OnCreateProduct($filter: ModelSubscriptionProductFilterInput) {
-    onCreateProduct(filter: $filter) {
-      id
-      image
-      images
-      brand
-      price
-      rating
-      numReview
-      isFeatured
-      name
-      description
-      countInStock
-      category {
-        id
-        name
-        src
-        products {
-          nextToken
-          startedAt
-          __typename
-        }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      categoryProductsId
-      __typename
-    }
-  }
-`;
-export const onUpdateProduct = /* GraphQL */ `
-  subscription OnUpdateProduct($filter: ModelSubscriptionProductFilterInput) {
-    onUpdateProduct(filter: $filter) {
-      id
-      image
-      images
-      brand
-      price
-      rating
-      numReview
-      isFeatured
-      name
-      description
-      countInStock
-      category {
-        id
-        name
-        src
-        products {
-          nextToken
-          startedAt
-          __typename
-        }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      categoryProductsId
-      __typename
-    }
-  }
-`;
-export const onDeleteProduct = /* GraphQL */ `
-  subscription OnDeleteProduct($filter: ModelSubscriptionProductFilterInput) {
-    onDeleteProduct(filter: $filter) {
-      id
-      image
-      images
-      brand
-      price
-      rating
-      numReview
-      isFeatured
-      name
-      description
-      countInStock
-      category {
-        id
-        name
-        src
-        products {
-          nextToken
-          startedAt
-          __typename
-        }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      categoryProductsId
-      __typename
-    }
-  }
-`;
 export const onCreateCategory = /* GraphQL */ `
   subscription OnCreateCategory($filter: ModelSubscriptionCategoryFilterInput) {
     onCreateCategory(filter: $filter) {
       id
       name
-      src
       products {
         items {
           id
-          image
-          images
-          brand
-          price
-          rating
-          numReview
-          isFeatured
-          name
-          description
-          countInStock
+          categoryId
+          productId
           createdAt
           updatedAt
           _version
           _deleted
           _lastChangedAt
-          categoryProductsId
           __typename
         }
         nextToken
@@ -167,26 +37,16 @@ export const onUpdateCategory = /* GraphQL */ `
     onUpdateCategory(filter: $filter) {
       id
       name
-      src
       products {
         items {
           id
-          image
-          images
-          brand
-          price
-          rating
-          numReview
-          isFeatured
-          name
-          description
-          countInStock
+          categoryId
+          productId
           createdAt
           updatedAt
           _version
           _deleted
           _lastChangedAt
-          categoryProductsId
           __typename
         }
         nextToken
@@ -207,26 +67,16 @@ export const onDeleteCategory = /* GraphQL */ `
     onDeleteCategory(filter: $filter) {
       id
       name
-      src
       products {
         items {
           id
-          image
-          images
-          brand
-          price
-          rating
-          numReview
-          isFeatured
-          name
-          description
-          countInStock
+          categoryId
+          productId
           createdAt
           updatedAt
           _version
           _deleted
           _lastChangedAt
-          categoryProductsId
           __typename
         }
         nextToken
@@ -242,30 +92,21 @@ export const onDeleteCategory = /* GraphQL */ `
     }
   }
 `;
-export const onCreateFavoriteProduct = /* GraphQL */ `
-  subscription OnCreateFavoriteProduct(
-    $filter: ModelSubscriptionFavoriteProductFilterInput
-  ) {
-    onCreateFavoriteProduct(filter: $filter) {
+export const onCreateProduct = /* GraphQL */ `
+  subscription OnCreateProduct($filter: ModelSubscriptionProductFilterInput) {
+    onCreateProduct(filter: $filter) {
       id
+      name
+      description
+      city
+      price
+      images
       userSub
-      productID
-      product {
-        id
-        image
-        images
-        brand
-        price
-        rating
-        numReview
-        isFeatured
-        name
-        description
-        countInStock
-        category {
+      categories {
+        items {
           id
-          name
-          src
+          categoryId
+          productId
           createdAt
           updatedAt
           _version
@@ -273,12 +114,8 @@ export const onCreateFavoriteProduct = /* GraphQL */ `
           _lastChangedAt
           __typename
         }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        categoryProductsId
+        nextToken
+        startedAt
         __typename
       }
       createdAt
@@ -286,35 +123,25 @@ export const onCreateFavoriteProduct = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      favoriteProductProductId
       __typename
     }
   }
 `;
-export const onUpdateFavoriteProduct = /* GraphQL */ `
-  subscription OnUpdateFavoriteProduct(
-    $filter: ModelSubscriptionFavoriteProductFilterInput
-  ) {
-    onUpdateFavoriteProduct(filter: $filter) {
+export const onUpdateProduct = /* GraphQL */ `
+  subscription OnUpdateProduct($filter: ModelSubscriptionProductFilterInput) {
+    onUpdateProduct(filter: $filter) {
       id
+      name
+      description
+      city
+      price
+      images
       userSub
-      productID
-      product {
-        id
-        image
-        images
-        brand
-        price
-        rating
-        numReview
-        isFeatured
-        name
-        description
-        countInStock
-        category {
+      categories {
+        items {
           id
-          name
-          src
+          categoryId
+          productId
           createdAt
           updatedAt
           _version
@@ -322,12 +149,8 @@ export const onUpdateFavoriteProduct = /* GraphQL */ `
           _lastChangedAt
           __typename
         }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        categoryProductsId
+        nextToken
+        startedAt
         __typename
       }
       createdAt
@@ -335,35 +158,25 @@ export const onUpdateFavoriteProduct = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      favoriteProductProductId
       __typename
     }
   }
 `;
-export const onDeleteFavoriteProduct = /* GraphQL */ `
-  subscription OnDeleteFavoriteProduct(
-    $filter: ModelSubscriptionFavoriteProductFilterInput
-  ) {
-    onDeleteFavoriteProduct(filter: $filter) {
+export const onDeleteProduct = /* GraphQL */ `
+  subscription OnDeleteProduct($filter: ModelSubscriptionProductFilterInput) {
+    onDeleteProduct(filter: $filter) {
       id
+      name
+      description
+      city
+      price
+      images
       userSub
-      productID
-      product {
-        id
-        image
-        images
-        brand
-        price
-        rating
-        numReview
-        isFeatured
-        name
-        description
-        countInStock
-        category {
+      categories {
+        items {
           id
-          name
-          src
+          categoryId
+          productId
           createdAt
           updatedAt
           _version
@@ -371,12 +184,8 @@ export const onDeleteFavoriteProduct = /* GraphQL */ `
           _lastChangedAt
           __typename
         }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        categoryProductsId
+        nextToken
+        startedAt
         __typename
       }
       createdAt
@@ -384,7 +193,6 @@ export const onDeleteFavoriteProduct = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      favoriteProductProductId
       __typename
     }
   }
@@ -393,11 +201,8 @@ export const onCreateMessage = /* GraphQL */ `
   subscription OnCreateMessage($filter: ModelSubscriptionMessageFilterInput) {
     onCreateMessage(filter: $filter) {
       id
-      image
-      productName
-      sellerName
-      situation
-      date
+      owner
+      message
       createdAt
       updatedAt
       _version
@@ -411,11 +216,8 @@ export const onUpdateMessage = /* GraphQL */ `
   subscription OnUpdateMessage($filter: ModelSubscriptionMessageFilterInput) {
     onUpdateMessage(filter: $filter) {
       id
-      image
-      productName
-      sellerName
-      situation
-      date
+      owner
+      message
       createdAt
       updatedAt
       _version
@@ -429,11 +231,164 @@ export const onDeleteMessage = /* GraphQL */ `
   subscription OnDeleteMessage($filter: ModelSubscriptionMessageFilterInput) {
     onDeleteMessage(filter: $filter) {
       id
-      image
-      productName
-      sellerName
-      situation
-      date
+      owner
+      message
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const onCreateProductCategories = /* GraphQL */ `
+  subscription OnCreateProductCategories(
+    $filter: ModelSubscriptionProductCategoriesFilterInput
+  ) {
+    onCreateProductCategories(filter: $filter) {
+      id
+      categoryId
+      productId
+      category {
+        id
+        name
+        products {
+          nextToken
+          startedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      product {
+        id
+        name
+        description
+        city
+        price
+        images
+        userSub
+        categories {
+          nextToken
+          startedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateProductCategories = /* GraphQL */ `
+  subscription OnUpdateProductCategories(
+    $filter: ModelSubscriptionProductCategoriesFilterInput
+  ) {
+    onUpdateProductCategories(filter: $filter) {
+      id
+      categoryId
+      productId
+      category {
+        id
+        name
+        products {
+          nextToken
+          startedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      product {
+        id
+        name
+        description
+        city
+        price
+        images
+        userSub
+        categories {
+          nextToken
+          startedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteProductCategories = /* GraphQL */ `
+  subscription OnDeleteProductCategories(
+    $filter: ModelSubscriptionProductCategoriesFilterInput
+  ) {
+    onDeleteProductCategories(filter: $filter) {
+      id
+      categoryId
+      productId
+      category {
+        id
+        name
+        products {
+          nextToken
+          startedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      product {
+        id
+        name
+        description
+        city
+        price
+        images
+        userSub
+        categories {
+          nextToken
+          startedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
       createdAt
       updatedAt
       _version

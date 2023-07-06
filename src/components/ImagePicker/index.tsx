@@ -34,7 +34,7 @@ function ImagePickerExample({ onNextPage, onPrevPage }: ImagePickerProps) {
   const [modalVisible, setModalVisible] = useState(false);
   const [image, setImage] = useState([]);
   const [imageAsset, setImageAsset] = useState([]);
-  const { setImageUrls } = useContext(TryContext);
+  const { setImageUrls, categories } = useContext(TryContext);
 
   const deleteByValue = (value) => {
     setImage((oldValues) => {
@@ -45,7 +45,7 @@ function ImagePickerExample({ onNextPage, onPrevPage }: ImagePickerProps) {
       return oldAssets.filter((asset) => asset.uri !== value);
     });
   };
-
+  useEffect(() => console.log("Categories: " + categories), []);
   useEffect(() => {
     console.log(imageAsset);
   }, [imageAsset]);

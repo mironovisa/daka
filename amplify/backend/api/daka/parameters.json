@@ -2,5 +2,11 @@
   "AppSyncApiName": "daka",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
   "DynamoDBEnableServerSideEncryption": false,
-  "AuthModeLastUpdated": "2023-06-26T21:25:45.294Z"
+  "AuthModeLastUpdated": "2023-06-26T21:25:45.294Z",
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authdakaedfd39d2",
+      "Outputs.UserPoolId"
+    ]
+  }
 }

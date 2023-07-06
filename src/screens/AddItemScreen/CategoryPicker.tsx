@@ -30,6 +30,7 @@ interface Category {
   url: string;
   createdAt: string;
   updatedAt: string;
+  subcategoryInner: string;
   subcategories: Subcategory[];
 }
 
@@ -52,12 +53,15 @@ const FirstPage = ({
     subcategory,
     setCategory,
     setSubcategory,
+    categories,
+    setCategories,
   } = useContext(TryContext);
   const [inputValue, setInputValue] = useState("");
   const [categoryInner, setCategoryInner] = useState<Category | null>(null);
   const [subcategoryInner, setSubcategoryInner] = useState<Subcategory | null>(
     null
   );
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
 
   const fetchUserSub = async () => {
     const userData = await Auth.currentAuthenticatedUser();
@@ -85,13 +89,22 @@ const FirstPage = ({
   };
 
   const handleButtonClick = () => {
-    setValue(inputValue);
-    console.log("New Value:", inputValue);
-    console.log("Selected Category:", category);
-    console.log("Selected Subcategory:", subcategory);
+    const newSelectedCategories: Category[] = [];
+
+    if (categoryInner) {
+      newSelectedCategories.push(categoryInner);
+    }
+
+    if (subcategoryInner) {
+      newSelectedCategories.push(subcategoryInner);
+    }
+
+    setSelectedCategories(newSelectedCategories);
+    setCategories(newSelectedCategories.map((category) => category.id));
+    onNextPage();
   };
 
-  const isButtonDisabled = !category || !subcategory; // Check if either category or subcategory is not selected
+  const isButtonDisabled = !category || !subcategory;
 
   return (
     <View style={[styles.container, containerStyle]}>
@@ -120,8 +133,8 @@ const FirstPage = ({
         ]}
       >
         <TouchableOpacity
-          onPress={onNextPage}
-          disabled={isButtonDisabled} // Disable the button based on the condition
+          onPress={handleButtonClick}
+          disabled={isButtonDisabled}
         >
           <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>

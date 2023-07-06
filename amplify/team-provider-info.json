@@ -13,7 +13,8 @@
     },
     "categories": {
       "auth": {
-        "dakaedfd39d2": {}
+        "dakaedfd39d2": {},
+        "userPoolGroups": {}
       },
       "api": {
         "daka": {}

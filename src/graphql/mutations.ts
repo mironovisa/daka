@@ -2,135 +2,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createProduct = /* GraphQL */ `
-  mutation CreateProduct(
-    $input: CreateProductInput!
-    $condition: ModelProductConditionInput
-  ) {
-    createProduct(input: $input, condition: $condition) {
-      id
-      image
-      images
-      brand
-      price
-      rating
-      numReview
-      isFeatured
-      name
-      description
-      countInStock
-      category {
-        id
-        name
-        src
-        products {
-          nextToken
-          startedAt
-          __typename
-        }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      categoryProductsId
-      __typename
-    }
-  }
-`;
-export const updateProduct = /* GraphQL */ `
-  mutation UpdateProduct(
-    $input: UpdateProductInput!
-    $condition: ModelProductConditionInput
-  ) {
-    updateProduct(input: $input, condition: $condition) {
-      id
-      image
-      images
-      brand
-      price
-      rating
-      numReview
-      isFeatured
-      name
-      description
-      countInStock
-      category {
-        id
-        name
-        src
-        products {
-          nextToken
-          startedAt
-          __typename
-        }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      categoryProductsId
-      __typename
-    }
-  }
-`;
-export const deleteProduct = /* GraphQL */ `
-  mutation DeleteProduct(
-    $input: DeleteProductInput!
-    $condition: ModelProductConditionInput
-  ) {
-    deleteProduct(input: $input, condition: $condition) {
-      id
-      image
-      images
-      brand
-      price
-      rating
-      numReview
-      isFeatured
-      name
-      description
-      countInStock
-      category {
-        id
-        name
-        src
-        products {
-          nextToken
-          startedAt
-          __typename
-        }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      categoryProductsId
-      __typename
-    }
-  }
-`;
 export const createCategory = /* GraphQL */ `
   mutation CreateCategory(
     $input: CreateCategoryInput!
@@ -139,26 +10,16 @@ export const createCategory = /* GraphQL */ `
     createCategory(input: $input, condition: $condition) {
       id
       name
-      src
       products {
         items {
           id
-          image
-          images
-          brand
-          price
-          rating
-          numReview
-          isFeatured
-          name
-          description
-          countInStock
+          categoryId
+          productId
           createdAt
           updatedAt
           _version
           _deleted
           _lastChangedAt
-          categoryProductsId
           __typename
         }
         nextToken
@@ -182,26 +43,16 @@ export const updateCategory = /* GraphQL */ `
     updateCategory(input: $input, condition: $condition) {
       id
       name
-      src
       products {
         items {
           id
-          image
-          images
-          brand
-          price
-          rating
-          numReview
-          isFeatured
-          name
-          description
-          countInStock
+          categoryId
+          productId
           createdAt
           updatedAt
           _version
           _deleted
           _lastChangedAt
-          categoryProductsId
           __typename
         }
         nextToken
@@ -225,26 +76,16 @@ export const deleteCategory = /* GraphQL */ `
     deleteCategory(input: $input, condition: $condition) {
       id
       name
-      src
       products {
         items {
           id
-          image
-          images
-          brand
-          price
-          rating
-          numReview
-          isFeatured
-          name
-          description
-          countInStock
+          categoryId
+          productId
           createdAt
           updatedAt
           _version
           _deleted
           _lastChangedAt
-          categoryProductsId
           __typename
         }
         nextToken
@@ -260,31 +101,24 @@ export const deleteCategory = /* GraphQL */ `
     }
   }
 `;
-export const createFavoriteProduct = /* GraphQL */ `
-  mutation CreateFavoriteProduct(
-    $input: CreateFavoriteProductInput!
-    $condition: ModelFavoriteProductConditionInput
+export const createProduct = /* GraphQL */ `
+  mutation CreateProduct(
+    $input: CreateProductInput!
+    $condition: ModelProductConditionInput
   ) {
-    createFavoriteProduct(input: $input, condition: $condition) {
+    createProduct(input: $input, condition: $condition) {
       id
+      name
+      description
+      city
+      price
+      images
       userSub
-      productID
-      product {
-        id
-        image
-        images
-        brand
-        price
-        rating
-        numReview
-        isFeatured
-        name
-        description
-        countInStock
-        category {
+      categories {
+        items {
           id
-          name
-          src
+          categoryId
+          productId
           createdAt
           updatedAt
           _version
@@ -292,12 +126,8 @@ export const createFavoriteProduct = /* GraphQL */ `
           _lastChangedAt
           __typename
         }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        categoryProductsId
+        nextToken
+        startedAt
         __typename
       }
       createdAt
@@ -305,36 +135,28 @@ export const createFavoriteProduct = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      favoriteProductProductId
       __typename
     }
   }
 `;
-export const updateFavoriteProduct = /* GraphQL */ `
-  mutation UpdateFavoriteProduct(
-    $input: UpdateFavoriteProductInput!
-    $condition: ModelFavoriteProductConditionInput
+export const updateProduct = /* GraphQL */ `
+  mutation UpdateProduct(
+    $input: UpdateProductInput!
+    $condition: ModelProductConditionInput
   ) {
-    updateFavoriteProduct(input: $input, condition: $condition) {
+    updateProduct(input: $input, condition: $condition) {
       id
+      name
+      description
+      city
+      price
+      images
       userSub
-      productID
-      product {
-        id
-        image
-        images
-        brand
-        price
-        rating
-        numReview
-        isFeatured
-        name
-        description
-        countInStock
-        category {
+      categories {
+        items {
           id
-          name
-          src
+          categoryId
+          productId
           createdAt
           updatedAt
           _version
@@ -342,12 +164,8 @@ export const updateFavoriteProduct = /* GraphQL */ `
           _lastChangedAt
           __typename
         }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        categoryProductsId
+        nextToken
+        startedAt
         __typename
       }
       createdAt
@@ -355,36 +173,28 @@ export const updateFavoriteProduct = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      favoriteProductProductId
       __typename
     }
   }
 `;
-export const deleteFavoriteProduct = /* GraphQL */ `
-  mutation DeleteFavoriteProduct(
-    $input: DeleteFavoriteProductInput!
-    $condition: ModelFavoriteProductConditionInput
+export const deleteProduct = /* GraphQL */ `
+  mutation DeleteProduct(
+    $input: DeleteProductInput!
+    $condition: ModelProductConditionInput
   ) {
-    deleteFavoriteProduct(input: $input, condition: $condition) {
+    deleteProduct(input: $input, condition: $condition) {
       id
+      name
+      description
+      city
+      price
+      images
       userSub
-      productID
-      product {
-        id
-        image
-        images
-        brand
-        price
-        rating
-        numReview
-        isFeatured
-        name
-        description
-        countInStock
-        category {
+      categories {
+        items {
           id
-          name
-          src
+          categoryId
+          productId
           createdAt
           updatedAt
           _version
@@ -392,12 +202,8 @@ export const deleteFavoriteProduct = /* GraphQL */ `
           _lastChangedAt
           __typename
         }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        categoryProductsId
+        nextToken
+        startedAt
         __typename
       }
       createdAt
@@ -405,7 +211,6 @@ export const deleteFavoriteProduct = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      favoriteProductProductId
       __typename
     }
   }
@@ -417,11 +222,8 @@ export const createMessage = /* GraphQL */ `
   ) {
     createMessage(input: $input, condition: $condition) {
       id
-      image
-      productName
-      sellerName
-      situation
-      date
+      owner
+      message
       createdAt
       updatedAt
       _version
@@ -438,11 +240,8 @@ export const updateMessage = /* GraphQL */ `
   ) {
     updateMessage(input: $input, condition: $condition) {
       id
-      image
-      productName
-      sellerName
-      situation
-      date
+      owner
+      message
       createdAt
       updatedAt
       _version
@@ -459,11 +258,167 @@ export const deleteMessage = /* GraphQL */ `
   ) {
     deleteMessage(input: $input, condition: $condition) {
       id
-      image
-      productName
-      sellerName
-      situation
-      date
+      owner
+      message
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const createProductCategories = /* GraphQL */ `
+  mutation CreateProductCategories(
+    $input: CreateProductCategoriesInput!
+    $condition: ModelProductCategoriesConditionInput
+  ) {
+    createProductCategories(input: $input, condition: $condition) {
+      id
+      categoryId
+      productId
+      category {
+        id
+        name
+        products {
+          nextToken
+          startedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      product {
+        id
+        name
+        description
+        city
+        price
+        images
+        userSub
+        categories {
+          nextToken
+          startedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const updateProductCategories = /* GraphQL */ `
+  mutation UpdateProductCategories(
+    $input: UpdateProductCategoriesInput!
+    $condition: ModelProductCategoriesConditionInput
+  ) {
+    updateProductCategories(input: $input, condition: $condition) {
+      id
+      categoryId
+      productId
+      category {
+        id
+        name
+        products {
+          nextToken
+          startedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      product {
+        id
+        name
+        description
+        city
+        price
+        images
+        userSub
+        categories {
+          nextToken
+          startedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const deleteProductCategories = /* GraphQL */ `
+  mutation DeleteProductCategories(
+    $input: DeleteProductCategoriesInput!
+    $condition: ModelProductCategoriesConditionInput
+  ) {
+    deleteProductCategories(input: $input, condition: $condition) {
+      id
+      categoryId
+      productId
+      category {
+        id
+        name
+        products {
+          nextToken
+          startedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      product {
+        id
+        name
+        description
+        city
+        price
+        images
+        userSub
+        categories {
+          nextToken
+          startedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
       createdAt
       updatedAt
       _version
