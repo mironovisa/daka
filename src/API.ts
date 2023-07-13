@@ -176,27 +176,24 @@ export type DeleteProductInput = {
   _version?: number | null,
 };
 
-export type CreateMessageInput = {
+export type CreateUserInput = {
   id?: string | null,
-  owner: string,
-  message: string,
+  userSub: string,
   _version?: number | null,
 };
 
-export type ModelMessageConditionInput = {
-  owner?: ModelStringInput | null,
-  message?: ModelStringInput | null,
-  and?: Array< ModelMessageConditionInput | null > | null,
-  or?: Array< ModelMessageConditionInput | null > | null,
-  not?: ModelMessageConditionInput | null,
+export type ModelUserConditionInput = {
+  userSub?: ModelStringInput | null,
+  and?: Array< ModelUserConditionInput | null > | null,
+  or?: Array< ModelUserConditionInput | null > | null,
+  not?: ModelUserConditionInput | null,
   _deleted?: ModelBooleanInput | null,
 };
 
-export type Message = {
-  __typename: "Message",
+export type User = {
+  __typename: "User",
   id: string,
-  owner: string,
-  message: string,
+  userSub: string,
   createdAt: string,
   updatedAt: string,
   _version: number,
@@ -204,14 +201,127 @@ export type Message = {
   _lastChangedAt: number,
 };
 
-export type UpdateMessageInput = {
+export type UpdateUserInput = {
   id: string,
-  owner?: string | null,
-  message?: string | null,
+  userSub?: string | null,
   _version?: number | null,
 };
 
+export type DeleteUserInput = {
+  id: string,
+  _version?: number | null,
+};
+
+export type CreateMessageInput = {
+  id?: string | null,
+  message: string,
+  _version?: number | null,
+  chatMessagesId?: string | null,
+  messageUserId?: string | null,
+};
+
+export type ModelMessageConditionInput = {
+  message?: ModelStringInput | null,
+  and?: Array< ModelMessageConditionInput | null > | null,
+  or?: Array< ModelMessageConditionInput | null > | null,
+  not?: ModelMessageConditionInput | null,
+  _deleted?: ModelBooleanInput | null,
+  chatMessagesId?: ModelIDInput | null,
+  messageUserId?: ModelIDInput | null,
+};
+
+export type ModelIDInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+  size?: ModelSizeInput | null,
+};
+
+export type Message = {
+  __typename: "Message",
+  id: string,
+  message: string,
+  chat?: Chat | null,
+  user?: User | null,
+  createdAt: string,
+  updatedAt: string,
+  _version: number,
+  _deleted?: boolean | null,
+  _lastChangedAt: number,
+  chatMessagesId?: string | null,
+  messageUserId?: string | null,
+};
+
+export type Chat = {
+  __typename: "Chat",
+  id: string,
+  productId: string,
+  sellerId: string,
+  buyerId: string,
+  messages?: ModelMessageConnection | null,
+  createdAt: string,
+  updatedAt: string,
+  _version: number,
+  _deleted?: boolean | null,
+  _lastChangedAt: number,
+};
+
+export type ModelMessageConnection = {
+  __typename: "ModelMessageConnection",
+  items:  Array<Message | null >,
+  nextToken?: string | null,
+  startedAt?: number | null,
+};
+
+export type UpdateMessageInput = {
+  id: string,
+  message?: string | null,
+  _version?: number | null,
+  chatMessagesId?: string | null,
+  messageUserId?: string | null,
+};
+
 export type DeleteMessageInput = {
+  id: string,
+  _version?: number | null,
+};
+
+export type CreateChatInput = {
+  id?: string | null,
+  productId: string,
+  sellerId: string,
+  buyerId: string,
+  _version?: number | null,
+};
+
+export type ModelChatConditionInput = {
+  productId?: ModelStringInput | null,
+  sellerId?: ModelStringInput | null,
+  buyerId?: ModelStringInput | null,
+  and?: Array< ModelChatConditionInput | null > | null,
+  or?: Array< ModelChatConditionInput | null > | null,
+  not?: ModelChatConditionInput | null,
+  _deleted?: ModelBooleanInput | null,
+};
+
+export type UpdateChatInput = {
+  id: string,
+  productId?: string | null,
+  sellerId?: string | null,
+  buyerId?: string | null,
+  _version?: number | null,
+};
+
+export type DeleteChatInput = {
   id: string,
   _version?: number | null,
 };
@@ -230,22 +340,6 @@ export type ModelProductCategoriesConditionInput = {
   or?: Array< ModelProductCategoriesConditionInput | null > | null,
   not?: ModelProductCategoriesConditionInput | null,
   _deleted?: ModelBooleanInput | null,
-};
-
-export type ModelIDInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-  size?: ModelSizeInput | null,
 };
 
 export type UpdateProductCategoriesInput = {
@@ -297,19 +391,47 @@ export type ModelProductConnection = {
   startedAt?: number | null,
 };
 
+export type ModelUserFilterInput = {
+  id?: ModelIDInput | null,
+  userSub?: ModelStringInput | null,
+  and?: Array< ModelUserFilterInput | null > | null,
+  or?: Array< ModelUserFilterInput | null > | null,
+  not?: ModelUserFilterInput | null,
+  _deleted?: ModelBooleanInput | null,
+};
+
+export type ModelUserConnection = {
+  __typename: "ModelUserConnection",
+  items:  Array<User | null >,
+  nextToken?: string | null,
+  startedAt?: number | null,
+};
+
 export type ModelMessageFilterInput = {
   id?: ModelIDInput | null,
-  owner?: ModelStringInput | null,
   message?: ModelStringInput | null,
   and?: Array< ModelMessageFilterInput | null > | null,
   or?: Array< ModelMessageFilterInput | null > | null,
   not?: ModelMessageFilterInput | null,
   _deleted?: ModelBooleanInput | null,
+  chatMessagesId?: ModelIDInput | null,
+  messageUserId?: ModelIDInput | null,
 };
 
-export type ModelMessageConnection = {
-  __typename: "ModelMessageConnection",
-  items:  Array<Message | null >,
+export type ModelChatFilterInput = {
+  id?: ModelIDInput | null,
+  productId?: ModelStringInput | null,
+  sellerId?: ModelStringInput | null,
+  buyerId?: ModelStringInput | null,
+  and?: Array< ModelChatFilterInput | null > | null,
+  or?: Array< ModelChatFilterInput | null > | null,
+  not?: ModelChatFilterInput | null,
+  _deleted?: ModelBooleanInput | null,
+};
+
+export type ModelChatConnection = {
+  __typename: "ModelChatConnection",
+  items:  Array<Chat | null >,
   nextToken?: string | null,
   startedAt?: number | null,
 };
@@ -393,12 +515,29 @@ export type ModelSubscriptionFloatInput = {
   notIn?: Array< number | null > | null,
 };
 
+export type ModelSubscriptionUserFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  userSub?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionUserFilterInput | null > | null,
+  or?: Array< ModelSubscriptionUserFilterInput | null > | null,
+  _deleted?: ModelBooleanInput | null,
+};
+
 export type ModelSubscriptionMessageFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  owner?: ModelSubscriptionStringInput | null,
   message?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionMessageFilterInput | null > | null,
   or?: Array< ModelSubscriptionMessageFilterInput | null > | null,
+  _deleted?: ModelBooleanInput | null,
+};
+
+export type ModelSubscriptionChatFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  productId?: ModelSubscriptionStringInput | null,
+  sellerId?: ModelSubscriptionStringInput | null,
+  buyerId?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionChatFilterInput | null > | null,
+  or?: Array< ModelSubscriptionChatFilterInput | null > | null,
   _deleted?: ModelBooleanInput | null,
 };
 
@@ -630,6 +769,60 @@ export type DeleteProductMutation = {
   } | null,
 };
 
+export type CreateUserMutationVariables = {
+  input: CreateUserInput,
+  condition?: ModelUserConditionInput | null,
+};
+
+export type CreateUserMutation = {
+  createUser?:  {
+    __typename: "User",
+    id: string,
+    userSub: string,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type UpdateUserMutationVariables = {
+  input: UpdateUserInput,
+  condition?: ModelUserConditionInput | null,
+};
+
+export type UpdateUserMutation = {
+  updateUser?:  {
+    __typename: "User",
+    id: string,
+    userSub: string,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type DeleteUserMutationVariables = {
+  input: DeleteUserInput,
+  condition?: ModelUserConditionInput | null,
+};
+
+export type DeleteUserMutation = {
+  deleteUser?:  {
+    __typename: "User",
+    id: string,
+    userSub: string,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
 export type CreateMessageMutationVariables = {
   input: CreateMessageInput,
   condition?: ModelMessageConditionInput | null,
@@ -639,13 +832,41 @@ export type CreateMessageMutation = {
   createMessage?:  {
     __typename: "Message",
     id: string,
-    owner: string,
     message: string,
+    chat?:  {
+      __typename: "Chat",
+      id: string,
+      productId: string,
+      sellerId: string,
+      buyerId: string,
+      messages?:  {
+        __typename: "ModelMessageConnection",
+        nextToken?: string | null,
+        startedAt?: number | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null,
+    user?:  {
+      __typename: "User",
+      id: string,
+      userSub: string,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
+    chatMessagesId?: string | null,
+    messageUserId?: string | null,
   } | null,
 };
 
@@ -658,13 +879,41 @@ export type UpdateMessageMutation = {
   updateMessage?:  {
     __typename: "Message",
     id: string,
-    owner: string,
     message: string,
+    chat?:  {
+      __typename: "Chat",
+      id: string,
+      productId: string,
+      sellerId: string,
+      buyerId: string,
+      messages?:  {
+        __typename: "ModelMessageConnection",
+        nextToken?: string | null,
+        startedAt?: number | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null,
+    user?:  {
+      __typename: "User",
+      id: string,
+      userSub: string,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
+    chatMessagesId?: string | null,
+    messageUserId?: string | null,
   } | null,
 };
 
@@ -677,8 +926,147 @@ export type DeleteMessageMutation = {
   deleteMessage?:  {
     __typename: "Message",
     id: string,
-    owner: string,
     message: string,
+    chat?:  {
+      __typename: "Chat",
+      id: string,
+      productId: string,
+      sellerId: string,
+      buyerId: string,
+      messages?:  {
+        __typename: "ModelMessageConnection",
+        nextToken?: string | null,
+        startedAt?: number | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null,
+    user?:  {
+      __typename: "User",
+      id: string,
+      userSub: string,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    chatMessagesId?: string | null,
+    messageUserId?: string | null,
+  } | null,
+};
+
+export type CreateChatMutationVariables = {
+  input: CreateChatInput,
+  condition?: ModelChatConditionInput | null,
+};
+
+export type CreateChatMutation = {
+  createChat?:  {
+    __typename: "Chat",
+    id: string,
+    productId: string,
+    sellerId: string,
+    buyerId: string,
+    messages?:  {
+      __typename: "ModelMessageConnection",
+      items:  Array< {
+        __typename: "Message",
+        id: string,
+        message: string,
+        createdAt: string,
+        updatedAt: string,
+        _version: number,
+        _deleted?: boolean | null,
+        _lastChangedAt: number,
+        chatMessagesId?: string | null,
+        messageUserId?: string | null,
+      } | null >,
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type UpdateChatMutationVariables = {
+  input: UpdateChatInput,
+  condition?: ModelChatConditionInput | null,
+};
+
+export type UpdateChatMutation = {
+  updateChat?:  {
+    __typename: "Chat",
+    id: string,
+    productId: string,
+    sellerId: string,
+    buyerId: string,
+    messages?:  {
+      __typename: "ModelMessageConnection",
+      items:  Array< {
+        __typename: "Message",
+        id: string,
+        message: string,
+        createdAt: string,
+        updatedAt: string,
+        _version: number,
+        _deleted?: boolean | null,
+        _lastChangedAt: number,
+        chatMessagesId?: string | null,
+        messageUserId?: string | null,
+      } | null >,
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type DeleteChatMutationVariables = {
+  input: DeleteChatInput,
+  condition?: ModelChatConditionInput | null,
+};
+
+export type DeleteChatMutation = {
+  deleteChat?:  {
+    __typename: "Chat",
+    id: string,
+    productId: string,
+    sellerId: string,
+    buyerId: string,
+    messages?:  {
+      __typename: "ModelMessageConnection",
+      items:  Array< {
+        __typename: "Message",
+        id: string,
+        message: string,
+        createdAt: string,
+        updatedAt: string,
+        _version: number,
+        _deleted?: boolean | null,
+        _lastChangedAt: number,
+        chatMessagesId?: string | null,
+        messageUserId?: string | null,
+      } | null >,
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -1048,6 +1436,72 @@ export type SyncProductsQuery = {
   } | null,
 };
 
+export type GetUserQueryVariables = {
+  id: string,
+};
+
+export type GetUserQuery = {
+  getUser?:  {
+    __typename: "User",
+    id: string,
+    userSub: string,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type ListUsersQueryVariables = {
+  filter?: ModelUserFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListUsersQuery = {
+  listUsers?:  {
+    __typename: "ModelUserConnection",
+    items:  Array< {
+      __typename: "User",
+      id: string,
+      userSub: string,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type SyncUsersQueryVariables = {
+  filter?: ModelUserFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  lastSync?: number | null,
+};
+
+export type SyncUsersQuery = {
+  syncUsers?:  {
+    __typename: "ModelUserConnection",
+    items:  Array< {
+      __typename: "User",
+      id: string,
+      userSub: string,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
 export type GetMessageQueryVariables = {
   id: string,
 };
@@ -1056,13 +1510,41 @@ export type GetMessageQuery = {
   getMessage?:  {
     __typename: "Message",
     id: string,
-    owner: string,
     message: string,
+    chat?:  {
+      __typename: "Chat",
+      id: string,
+      productId: string,
+      sellerId: string,
+      buyerId: string,
+      messages?:  {
+        __typename: "ModelMessageConnection",
+        nextToken?: string | null,
+        startedAt?: number | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null,
+    user?:  {
+      __typename: "User",
+      id: string,
+      userSub: string,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
+    chatMessagesId?: string | null,
+    messageUserId?: string | null,
   } | null,
 };
 
@@ -1078,13 +1560,36 @@ export type ListMessagesQuery = {
     items:  Array< {
       __typename: "Message",
       id: string,
-      owner: string,
       message: string,
+      chat?:  {
+        __typename: "Chat",
+        id: string,
+        productId: string,
+        sellerId: string,
+        buyerId: string,
+        createdAt: string,
+        updatedAt: string,
+        _version: number,
+        _deleted?: boolean | null,
+        _lastChangedAt: number,
+      } | null,
+      user?:  {
+        __typename: "User",
+        id: string,
+        userSub: string,
+        createdAt: string,
+        updatedAt: string,
+        _version: number,
+        _deleted?: boolean | null,
+        _lastChangedAt: number,
+      } | null,
       createdAt: string,
       updatedAt: string,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
+      chatMessagesId?: string | null,
+      messageUserId?: string | null,
     } | null >,
     nextToken?: string | null,
     startedAt?: number | null,
@@ -1104,8 +1609,130 @@ export type SyncMessagesQuery = {
     items:  Array< {
       __typename: "Message",
       id: string,
-      owner: string,
       message: string,
+      chat?:  {
+        __typename: "Chat",
+        id: string,
+        productId: string,
+        sellerId: string,
+        buyerId: string,
+        createdAt: string,
+        updatedAt: string,
+        _version: number,
+        _deleted?: boolean | null,
+        _lastChangedAt: number,
+      } | null,
+      user?:  {
+        __typename: "User",
+        id: string,
+        userSub: string,
+        createdAt: string,
+        updatedAt: string,
+        _version: number,
+        _deleted?: boolean | null,
+        _lastChangedAt: number,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      chatMessagesId?: string | null,
+      messageUserId?: string | null,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type GetChatQueryVariables = {
+  id: string,
+};
+
+export type GetChatQuery = {
+  getChat?:  {
+    __typename: "Chat",
+    id: string,
+    productId: string,
+    sellerId: string,
+    buyerId: string,
+    messages?:  {
+      __typename: "ModelMessageConnection",
+      items:  Array< {
+        __typename: "Message",
+        id: string,
+        message: string,
+        createdAt: string,
+        updatedAt: string,
+        _version: number,
+        _deleted?: boolean | null,
+        _lastChangedAt: number,
+        chatMessagesId?: string | null,
+        messageUserId?: string | null,
+      } | null >,
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type ListChatsQueryVariables = {
+  filter?: ModelChatFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListChatsQuery = {
+  listChats?:  {
+    __typename: "ModelChatConnection",
+    items:  Array< {
+      __typename: "Chat",
+      id: string,
+      productId: string,
+      sellerId: string,
+      buyerId: string,
+      messages?:  {
+        __typename: "ModelMessageConnection",
+        nextToken?: string | null,
+        startedAt?: number | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type SyncChatsQueryVariables = {
+  filter?: ModelChatFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  lastSync?: number | null,
+};
+
+export type SyncChatsQuery = {
+  syncChats?:  {
+    __typename: "ModelChatConnection",
+    items:  Array< {
+      __typename: "Chat",
+      id: string,
+      productId: string,
+      sellerId: string,
+      buyerId: string,
+      messages?:  {
+        __typename: "ModelMessageConnection",
+        nextToken?: string | null,
+        startedAt?: number | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
       _version: number,
@@ -1588,6 +2215,57 @@ export type OnDeleteProductSubscription = {
   } | null,
 };
 
+export type OnCreateUserSubscriptionVariables = {
+  filter?: ModelSubscriptionUserFilterInput | null,
+};
+
+export type OnCreateUserSubscription = {
+  onCreateUser?:  {
+    __typename: "User",
+    id: string,
+    userSub: string,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type OnUpdateUserSubscriptionVariables = {
+  filter?: ModelSubscriptionUserFilterInput | null,
+};
+
+export type OnUpdateUserSubscription = {
+  onUpdateUser?:  {
+    __typename: "User",
+    id: string,
+    userSub: string,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type OnDeleteUserSubscriptionVariables = {
+  filter?: ModelSubscriptionUserFilterInput | null,
+};
+
+export type OnDeleteUserSubscription = {
+  onDeleteUser?:  {
+    __typename: "User",
+    id: string,
+    userSub: string,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
 export type OnCreateMessageSubscriptionVariables = {
   filter?: ModelSubscriptionMessageFilterInput | null,
 };
@@ -1596,13 +2274,41 @@ export type OnCreateMessageSubscription = {
   onCreateMessage?:  {
     __typename: "Message",
     id: string,
-    owner: string,
     message: string,
+    chat?:  {
+      __typename: "Chat",
+      id: string,
+      productId: string,
+      sellerId: string,
+      buyerId: string,
+      messages?:  {
+        __typename: "ModelMessageConnection",
+        nextToken?: string | null,
+        startedAt?: number | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null,
+    user?:  {
+      __typename: "User",
+      id: string,
+      userSub: string,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
+    chatMessagesId?: string | null,
+    messageUserId?: string | null,
   } | null,
 };
 
@@ -1614,13 +2320,41 @@ export type OnUpdateMessageSubscription = {
   onUpdateMessage?:  {
     __typename: "Message",
     id: string,
-    owner: string,
     message: string,
+    chat?:  {
+      __typename: "Chat",
+      id: string,
+      productId: string,
+      sellerId: string,
+      buyerId: string,
+      messages?:  {
+        __typename: "ModelMessageConnection",
+        nextToken?: string | null,
+        startedAt?: number | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null,
+    user?:  {
+      __typename: "User",
+      id: string,
+      userSub: string,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
+    chatMessagesId?: string | null,
+    messageUserId?: string | null,
   } | null,
 };
 
@@ -1632,8 +2366,144 @@ export type OnDeleteMessageSubscription = {
   onDeleteMessage?:  {
     __typename: "Message",
     id: string,
-    owner: string,
     message: string,
+    chat?:  {
+      __typename: "Chat",
+      id: string,
+      productId: string,
+      sellerId: string,
+      buyerId: string,
+      messages?:  {
+        __typename: "ModelMessageConnection",
+        nextToken?: string | null,
+        startedAt?: number | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null,
+    user?:  {
+      __typename: "User",
+      id: string,
+      userSub: string,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    chatMessagesId?: string | null,
+    messageUserId?: string | null,
+  } | null,
+};
+
+export type OnCreateChatSubscriptionVariables = {
+  filter?: ModelSubscriptionChatFilterInput | null,
+};
+
+export type OnCreateChatSubscription = {
+  onCreateChat?:  {
+    __typename: "Chat",
+    id: string,
+    productId: string,
+    sellerId: string,
+    buyerId: string,
+    messages?:  {
+      __typename: "ModelMessageConnection",
+      items:  Array< {
+        __typename: "Message",
+        id: string,
+        message: string,
+        createdAt: string,
+        updatedAt: string,
+        _version: number,
+        _deleted?: boolean | null,
+        _lastChangedAt: number,
+        chatMessagesId?: string | null,
+        messageUserId?: string | null,
+      } | null >,
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type OnUpdateChatSubscriptionVariables = {
+  filter?: ModelSubscriptionChatFilterInput | null,
+};
+
+export type OnUpdateChatSubscription = {
+  onUpdateChat?:  {
+    __typename: "Chat",
+    id: string,
+    productId: string,
+    sellerId: string,
+    buyerId: string,
+    messages?:  {
+      __typename: "ModelMessageConnection",
+      items:  Array< {
+        __typename: "Message",
+        id: string,
+        message: string,
+        createdAt: string,
+        updatedAt: string,
+        _version: number,
+        _deleted?: boolean | null,
+        _lastChangedAt: number,
+        chatMessagesId?: string | null,
+        messageUserId?: string | null,
+      } | null >,
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type OnDeleteChatSubscriptionVariables = {
+  filter?: ModelSubscriptionChatFilterInput | null,
+};
+
+export type OnDeleteChatSubscription = {
+  onDeleteChat?:  {
+    __typename: "Chat",
+    id: string,
+    productId: string,
+    sellerId: string,
+    buyerId: string,
+    messages?:  {
+      __typename: "ModelMessageConnection",
+      items:  Array< {
+        __typename: "Message",
+        id: string,
+        message: string,
+        createdAt: string,
+        updatedAt: string,
+        _version: number,
+        _deleted?: boolean | null,
+        _lastChangedAt: number,
+        chatMessagesId?: string | null,
+        messageUserId?: string | null,
+      } | null >,
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,

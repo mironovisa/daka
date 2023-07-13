@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   View,
   Image,
@@ -7,20 +7,37 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
-import { Product } from "../../models";
+import { Product, User } from "../../models";
 import ImageCarousel from "../../components/ImageCarousel";
 import DetailsTextBox from "../../components/DetailsTextBox";
 import SellerInfo from "../../components/SellerInfo";
 import MapInfo from "../../components/MapInfo";
 import CallAndChatButtons from "../../components/CallAndChatButtons";
-import { DataStore } from "aws-amplify";
+import { DataStore, Auth } from "aws-amplify";
+import useHook from "../ChatScreen/customHook/useHook";
 
 const { width, height } = Dimensions.get("window");
 
 function Index(props) {
   const [product, setProduct] = useState<Product>();
+  const [currentUserId, setCurrentUserId] = useState("");
+  useEffect(() => {
+    const fetchCurrentUserId = async () => {
+      try {
+        const result = await Auth.currentAuthenticatedUser();
+        const currentUserIdFetched = result.attributes.sub;
+        console.log("Hook fetched currentID:", currentUserIdFetched);
+        setCurrentUserId(currentUserIdFetched);
+      } catch (error) {
+        console.log("Error fetching current user ID:", error);
+      }
+    };
+
+    fetchCurrentUserId();
+  }, []);
   useEffect(() => {
     if (!props.route.params?.id) return;
+    console.log("ProductDetailsscreen data: " + props.route.params.id);
     const fetchProducts = async () => {
       const results = await DataStore.query(Product, props.route.params.id);
       setProduct(results);
@@ -49,7 +66,9 @@ function Index(props) {
         return (
           <CallAndChatButtons
             key={`callAndChatButtons-${index}`}
-            userId={item.userId}
+            sellerId={item.userSub}
+            productId={item.id}
+            currentUserId={currentUserId}
           />
         );
       case "sellerInfo":
@@ -71,7 +90,12 @@ function Index(props) {
       name: product.name,
       description: product.description,
     },
-    { type: "callAndChatButtons", userId: product.userId },
+    {
+      type: "callAndChatButtons",
+      userSub: product.userSub,
+      id: product.id,
+      currentUserId: currentUserId,
+    },
     { type: "sellerInfo", rating: product.rating },
     { type: "mapInfo" },
   ];

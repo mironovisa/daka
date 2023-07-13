@@ -6,11 +6,11 @@ import useHook from "./customHook/useHook";
 
 function Example(props) {
   const [messages, setMessages] = useState([]);
-  const currentUserId = props.route.params.currentUserId;
-  const chatId = props.route.params.chatId;
-
+  const productId = props.route.params.productId;
+  const sellerId = props.route.params.userId;
+  const { currentUserId, chat } = useHook(productId, sellerId);
   useEffect(() => {
-    console.log("Chatscreen check for chat", chatId);
+    console.log("Chatscreen check for chat", chat);
   }, []);
 
   const fetchMessages = async () => {
@@ -20,7 +20,7 @@ function Example(props) {
           query GetMessages {
             listMessages(filter: {
               chatMessagesId: {
-                eq: "${chatId}"           }
+                eq: "2a3f0380-f2cc-4d3b-881e-ae6db266cc40"           }
             }) {
               items {
                 id
@@ -61,12 +61,12 @@ function Example(props) {
         GiftedChat.append(previousMessages, messages)
       );
       const { user, text } = messages[0];
-      if (chatId) {
+      if (chat) {
         try {
           const newMessage = await DataStore.save(
             new Message({
               message: text,
-              chatMessagesId: chatId,
+              chatMessagesId: chat,
               messageUserId: currentUserId,
             })
           );
@@ -76,7 +76,7 @@ function Example(props) {
         }
       }
     },
-    [chatId, currentUserId]
+    [chat, currentUserId]
   );
 
   return (

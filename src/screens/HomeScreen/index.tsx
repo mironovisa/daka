@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   View,
   Text,
@@ -8,19 +8,42 @@ import {
   Image,
 } from "react-native";
 import styles from "./styles";
-import productArray from "../../../assets/products";
-// import { Product } from '../../models';
-import FavoriteProducts from "../../components/FavoriteProducts";
 import MainProducts from "../../components/MainProducts";
 import CategoryFilter from "../../components/CategoryFilter";
 import { Product, User } from "../../models";
 import { DataStore, Auth } from "aws-amplify";
 import "@azure/core-asynciterator-polyfill";
+import { TryContext } from "../../context/tryoutCont";
 
 const HomeScreen = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [user, setUser] = useState("");
+  const { currentUserId, setCurrentUserId } = useContext(TryContext);
+
+  // const fetchOrCreateUser = async () => {
+  //   const result = await Auth.currentAuthenticatedUser();
+  //   const userSub = result.attributes.sub;
+  //   const findUser = await DataStore.query(User, (c) =>
+  //     c.and((c) => [c.userSub.eq(userSub)])
+  //   );
+  //   setCurrentUserId(findUser[0].id);
+  //   console.log("User found", findUser);
+  //   if (findUser.length === 0) {
+  //     const newUser = await DataStore.save(
+  //       new User({
+  //         userSub: userSub,
+  //       })
+  //     );
+  //     console.log("New user saved", newUser.id);
+  //     setCurrentUserId(newUser.id);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchOrCreateUser();
+  // }, []);
 
   const fetchProducts = async () => {
     try {

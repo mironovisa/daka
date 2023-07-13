@@ -1,13 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, TouchableOpacity, Dimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import ChatModal from "../Chat/index";
 const { width, height } = Dimensions.get("window");
 import { useNavigation } from "@react-navigation/native";
+import useHook from "../../screens/ChatScreen/customHook/useHook";
 
-function Index({ userId }: { userId: string }) {
+function Index({
+  sellerId,
+  productId,
+  currentUserId,
+}: {
+  sellerId: string;
+  productId: string;
+  currentUserId: string;
+}) {
   const navigation = useNavigation();
+  const { chat } = useHook(productId, sellerId);
+  useEffect(() => {
+    console.log("UserId from buttons comp: " + sellerId);
+    console.log("productId from buttons comp: " + productId);
+  }, []);
   return (
     <View>
       <View
@@ -31,7 +45,12 @@ function Index({ userId }: { userId: string }) {
         >
           <TouchableOpacity
             style={{ flexDirection: "row", padding: 8 }}
-            onPress={() => navigation.navigate("ChatScreen",{userId: userId})}
+            onPress={() =>
+              navigation.navigate("ChatScreen", {
+                chatId: chat,
+                currentUserId: currentUserId,
+              })
+            }
           >
             <Ionicons name="chatbox-ellipses-outline" size={20} color="blue" />
             <Text style={{ fontSize: 20, paddingLeft: 10 }}>Chat</Text>

@@ -1,72 +1,60 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { TouchableOpacity, View, Text, Image, StyleSheet } from "react-native";
-import { Message } from "../../models";
+import { Product, Chat } from "../../models";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
-
+import { DataStore, Auth } from "aws-amplify";
+import { useNavigation } from "@react-navigation/native";
 type MessageItemProps = {
-  item: Message;
+  item: Chat;
 };
 
 function Index({ item }: MessageItemProps) {
+  const [image, setImage] = useState("");
+  const [title, setTitle] = useState("");
+  const navigation = useNavigation();
+  const [currentUserId, setCurrentUserId] = useState("");
+
+  const fetchProductData = async () => {
+    const results = await DataStore.query(Product, item.productId);
+    setImage(results.images[0]);
+    setTitle(results.name);
+  };
+
+  const fetchCurrentUserId = async () => {
+    const result = await Auth.currentAuthenticatedUser();
+    setCurrentUserId(result.attributes.sub);
+  };
+  useEffect(() => {
+    fetchCurrentUserId();
+  }, []);
+  useEffect(() => {
+    fetchProductData();
+  }, []);
+
+  const handlePress = () => {
+    console.log("Clicked on chat ID:", item.id);
+  };
+
   return (
-    <TouchableOpacity style={styles.messageItem}>
-      <View>
-        <Image
-          source={{ uri: item.image }}
-          style={{ width: 85, height: 85, borderRadius: 12 }}
-        />
-
-        <View
-          style={{
-            height: 36,
-            width: 36,
-            borderRadius: 18,
-            backgroundColor: "#A3CE72",
-            position: "absolute",
-            bottom: 0,
-            right: -16,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Text style={{ color: "white", fontWeight: "bold" }}>S</Text>
+    <TouchableOpacity
+      style={{ flexDirection: "row", padding: 8 }}
+      onPress={() =>
+        navigation.navigate("ChatScreen", {
+          chatId: item.id,
+          currentUserId: currentUserId,
+        })
+      }
+    >
+      <View style={{ flexDirection: "row" }}>
+        <View>
+          <Image
+            source={{ uri: image }}
+            style={{ width: 85, height: 85, borderRadius: 12 }}
+          />
         </View>
-      </View>
-      <View style={{ flex: 1, marginLeft: 20, flexDirection: "column" }}>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ fontWeight: "600", fontSize: 16 }}>
-            {item.productName.length > 25
-              ? item.productName.substring(0, 22) + "..."
-              : item.productName}
-          </Text>
-          <Text style={{ color: "#8B8B8B", fontWeight: "500" }}>+1 month</Text>
+        <View>
+          <Text style={{ color: "black", fontWeight: "bold" }}>{title}</Text>
         </View>
-        <Text style={{ fontSize: 15, marginTop: 5 }}>{item.sellerName}</Text>
-        {item.situation === "Sold" ? (
-          <View style={{ flexDirection: "row", alignItems: "center", marginTop: 5 }}>
-            <FontAwesome
-              style={{ marginRight: 5 }}
-              name="times-circle"
-              size={16}
-              color="#A0A0A0"
-            />
-            <Text style={{ fontSize: 15, color: '#777777' }}>No longer available</Text>
-          </View>
-        ) : (
-            <View style={{ flexDirection: "row", alignItems: "center", marginTop: 5 }}>
-              
-              <Text style={{ fontSize: 15, color: '#F24E61', fontWeight: '500' }}>Sold</Text>
-            </View>
-          )}
-
-        <View></View>
       </View>
     </TouchableOpacity>
   );

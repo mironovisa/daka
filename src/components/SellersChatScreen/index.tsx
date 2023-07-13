@@ -2,10 +2,10 @@ import React, { useState, useCallback, useEffect } from "react";
 import { GiftedChat } from "react-native-gifted-chat";
 import { DataStore, API, graphqlOperation } from "aws-amplify";
 import { Product, Message, User } from "../../models";
-import useHook from "./customHook/useHook";
 
 function Example(props) {
   const [messages, setMessages] = useState([]);
+  const productId = props.route.params.productId;
   const currentUserId = props.route.params.currentUserId;
   const chatId = props.route.params.chatId;
 
@@ -61,7 +61,7 @@ function Example(props) {
         GiftedChat.append(previousMessages, messages)
       );
       const { user, text } = messages[0];
-      if (chatId) {
+      if (chat) {
         try {
           const newMessage = await DataStore.save(
             new Message({
@@ -76,7 +76,7 @@ function Example(props) {
         }
       }
     },
-    [chatId, currentUserId]
+    [chat, currentUserId]
   );
 
   return (
@@ -91,26 +91,3 @@ function Example(props) {
 }
 
 export default Example;
-
-// useEffect(() => {
-//     if (currentUserId) {
-//       setMessages([
-//         {
-//           _id: 1,
-//           text: "Hello developer",
-//           createdAt: new Date(),
-//           user: {
-//             _id: currentUserId,
-//           },
-//         },
-//         {
-//           _id: 2,
-//           text: "Developer",
-//           createdAt: new Date(),
-//           user: {
-//             _id: 2,
-//           },
-//         },
-//       ]);
-//     }
-//   }, [currentUserId]);

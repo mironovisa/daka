@@ -33,6 +33,7 @@ const AddInitDataComp = ({ onNextPage, onPrevPage }: AddInitDataProps) => {
     try {
       const userData = await Auth.currentAuthenticatedUser();
       const userId = userData.attributes.sub;
+      console.log("The userId is " + userId);
       const product = await DataStore.save(
         new Product({
           name,
@@ -43,9 +44,9 @@ const AddInitDataComp = ({ onNextPage, onPrevPage }: AddInitDataProps) => {
           userSub: userId,
         })
       );
-  
+
       console.log("Product created:", product);
-  
+
       // Create the product categories using DataStore.mutate
       for (const categoryId of categories) {
         const productCategory = await DataStore.save(
@@ -60,7 +61,7 @@ const AddInitDataComp = ({ onNextPage, onPrevPage }: AddInitDataProps) => {
       console.log("Error creating product:", error);
     }
   };
-  
+
   return (
     <ScrollView>
       <View style={styles.container}>
