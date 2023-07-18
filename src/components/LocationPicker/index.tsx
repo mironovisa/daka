@@ -14,6 +14,8 @@ import {
 } from "expo-location";
 import MapView, { Marker } from "react-native-maps";
 import { TryContext } from "../../context/tryoutCont";
+import { MaterialIcons } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 
 const { height, width } = Dimensions.get("screen");
 const MapPreview = ({ lat, lng }) => {
@@ -91,10 +93,48 @@ const Index = () => {
         <MapPreview lat={haveLocation.lat} lng={haveLocation.lng} />
       )}
       <View style={styles.actions}>
-        <TouchableOpacity onPress={getLocationHandler}>
+        <TouchableOpacity
+          onPress={getLocationHandler}
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            padding: 10,
+            borderWidth: 1,
+            borderRadius: 15,
+            borderColor: "#326273",
+            backgroundColor: "#97B858",
+            marginHorizontal: 1,
+            marginTop: 5,
+          }}
+        >
+          <MaterialIcons
+            name="gps-fixed"
+            size={20}
+            color="black"
+            style={{ paddingHorizontal: 5 }}
+          />
           <Text>Find by GPS</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={pickOnMapHandler}>
+        <TouchableOpacity
+          onPress={pickOnMapHandler}
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            padding: 10,
+            borderWidth: 1,
+            borderRadius: 15,
+            borderColor: "#326273",
+            backgroundColor: "#97B858",
+            marginHorizontal: 1,
+            marginTop: 5,
+          }}
+        >
+          <Entypo
+            name="map"
+            size={20}
+            color="black"
+            style={{ paddingHorizontal: 5 }}
+          />
           <Text>Find on Map</Text>
         </TouchableOpacity>
       </View>
@@ -120,7 +160,7 @@ const styles = StyleSheet.create({
   },
   actions: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     alignItems: "center",
   },
 });

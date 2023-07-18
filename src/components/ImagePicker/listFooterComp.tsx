@@ -5,8 +5,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   Animated,
+  Text,
 } from "react-native";
-import addPhoto from "../../../assets/addPhoto.png";
+import addPhoto from "../../../assets/addPhotoo.png";
 
 interface ImagePileProps {
   onPressA: (value: string) => void;
@@ -19,8 +20,8 @@ function ListFooter({ onPressA }: ImagePileProps) {
     const interval = setInterval(() => {
       Animated.sequence([
         Animated.timing(scaleValue, {
-          toValue: 1.2,
-          duration: 300,
+          toValue: 1.1,
+          duration: 3000,
           useNativeDriver: true,
         }),
         Animated.timing(scaleValue, {
@@ -36,12 +37,16 @@ function ListFooter({ onPressA }: ImagePileProps) {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={onPressA}>
-        <Animated.Image
-          source={addPhoto}
-          style={[styles.image, { transform: [{ scale: scaleValue }] }]}
-        />
-      </TouchableOpacity>
+      {/* <Text style={styles.text}>
+        Add item images, take photo or add from gallery. Please, add at least 1
+        photo to move forward.
+      </Text> */}
+      <Text style={styles.text}></Text>
+      <View style={styles.image}>
+        <TouchableOpacity onPress={onPressA} style={styles.image}>
+          {/* <Image source={addPhoto} style={styles.image} /> */}
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -50,15 +55,20 @@ export default ListFooter;
 
 const styles = StyleSheet.create({
   container: {
-    alignContent: "flex-start",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    margin: 15,
+    backgroundColor: "#5C9EAD",
   },
   image: {
-    height: 150,
-    width: 150,
+    height: 160,
+    width: 160,
     resizeMode: "cover",
-    borderRadius: 10,
+    paddingHorizontal: 8,
+    marginBottom: 15,
+  },
+  text: {
+    fontWeight: "bold",
+    fontSize: 16,
+    paddingTop: 15,
+    paddingHorizontal: 15,
+    color: "#FFFFFF",
   },
 });

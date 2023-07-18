@@ -25,17 +25,14 @@ function ImagePile({ img, deleteByValue }: ImagePileProps) {
 export default ImagePile;
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    justifyContent: "center",
-    alignContent: "center",
-    margin: 15,
-  },
+  container: {},
   image: {
-    height: 130,
-    width: 130,
+    // height: 140,
+    // width: 140,
     resizeMode: "cover",
     borderRadius: 10,
+    padding: 80,
+    margin: 15,
   },
   actionButton: {
     backgroundColor: "rgba(0, 0, 0, 0.5)",

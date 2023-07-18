@@ -1,31 +1,51 @@
-import React, {useEffect, useState} from 'react'
-import {View, Text, FlatList} from "react-native"
-import products from '../../../assets/products'
-import { Product } from '../../models'
-import UsersOwnAds from "../../components/UsersAds/UsersOwnAds"
-import UserProfileHeader from "../../components/UserProfileHeader"
+import React, { useEffect, useState } from "react";
+import { View } from "react-native";
+import UserProfileHeader from "../../components/UserProfileHeader";
+import { DataStore, Auth, API, graphqlOperation } from "aws-amplify";
+import { Product } from "../../models";
 
-
-function Index(){
-  const [favoriteProducts, setFavoriteProducts] = useState<Product[]>([])
+function Index() {
+  const [currentUserId, setCurrentUserId] = useState("");
+  const [usersItems, setUsersItems] = useState([]);
+  const fetchCurrentUserId = async () => {
+    const result = await Auth.currentAuthenticatedUser();
+    setCurrentUserId(result.attributes.sub);
+  };
   useEffect(() => {
-    setFavoriteProducts(products)
-    return () => {
-      setFavoriteProducts([])
+    fetchCurrentUserId();
+  }, []);
+  const findUserItems = async () => {
+    const result = await API.graphql(
+      graphqlOperation(`
+        query GetUserProducts {
+          listProducts(filter: {
+            userSub: { eq: "${currentUserId}" }
+          }) {
+            items {
+              id
+              images
+              name
+              price
+              createdAt
+            }
+          }
+        }
+      `)
+    );
+    setUsersItems(result.data.listProducts.items);
+    console.log(result.data.listProducts);
+  };
+  useEffect(() => {
+    if (currentUserId) {
+      findUserItems();
     }
-  },[])
+  }, [currentUserId]);
+
   return (
-    <View style={{ padding: 13, }}>
+    <View style={{ padding: 13 }}>
       <UserProfileHeader />
-      <FlatList
-        data={favoriteProducts}
-        renderItem={({ item, index }) => (
-          <UsersOwnAds product={item} />
-        )}
-        showsVerticalScrollIndicator={false}
-      />
-  </View>   
-  )
+    </View>
+  );
 }
 
-export default Index
+export default Index;

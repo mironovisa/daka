@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,14 +8,15 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
+  Keyboard,
 } from "react-native";
+import MapView from "react-native-maps";
 import { TryContext } from "../../../context/tryoutCont";
 import { DataStore, Auth } from "aws-amplify";
 import { Product, Category, ProductCategories } from "../../../models";
-import GptRequester from "../gptRequester";
-import LocationPicker from "../../../components/LocationPicker";
-
-const { width, height } = Dimensions.get("window");
+import { useRoute } from "@react-navigation/native";
+import LocationPicker from "../LocationPicker";
+const { width, height } = Dimensions.get("screen");
 
 interface AddInitDataProps {
   onNextPage: () => void;
@@ -23,12 +24,20 @@ interface AddInitDataProps {
 }
 
 const AddInitDataComp = ({ onNextPage, onPrevPage }: AddInitDataProps) => {
-  const { name, setName, price, setPrice, categories, imageUrls } =
-    useContext(TryContext);
+  // const { name, setName, price, setPrice, categories, imageUrls } =
+  //   useContext(TryContext);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
 
-  const [tempDescription, setTempDescription] = useState("");
-  const [shouldCallGptRequester, setShouldCallGptRequester] = useState(false);
+  const route = useRoute();
+  const { setTitleAndDescGathered } = route.params;
 
+  useEffect(() => {
+    if (title && description && price) {
+      setTitleAndDescGathered(true);
+    }
+  }, [title, description, price]);
   const handleCreateProduct = async () => {
     try {
       const userData = await Auth.currentAuthenticatedUser();
@@ -63,22 +72,27 @@ const AddInitDataComp = ({ onNextPage, onPrevPage }: AddInitDataProps) => {
   };
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <Text style={styles.label}>Name</Text>
+    <View style={styles.container}>
+      <ScrollView style={{ marginBottom: 100 }}>
+        <LocationPicker />
+        <Text style={styles.label}>Title</Text>
         <TextInput
-          value={name}
-          onChangeText={setName}
-          placeholder="Enter the name"
+          value={title}
+          onChangeText={setTitle}
+          placeholder="Enter the title"
           style={styles.input}
+          returnKeyType="done" // Add returnKeyType prop with "done" value
+          onSubmitEditing={() => Keyboard.dismiss()}
         />
 
         <Text style={styles.label}>Description</Text>
         <TextInput
-          value={tempDescription}
-          onChangeText={setTempDescription}
+          value={description}
+          onChangeText={setDescription}
           placeholder="Enter the description"
-          style={styles.input}
+          style={styles.inputDesc}
+          returnKeyType="done" // Add returnKeyType prop with "done" value
+          onSubmitEditing={() => Keyboard.dismiss()}
           multiline
         />
 
@@ -88,34 +102,12 @@ const AddInitDataComp = ({ onNextPage, onPrevPage }: AddInitDataProps) => {
           onChangeText={setPrice}
           placeholder="Enter the price"
           style={styles.input}
-          keyboardType="numeric"
+          keyboardType="number-pad"
+          returnKeyType="done" // Add returnKeyType prop with "done" value
+          onSubmitEditing={() => Keyboard.dismiss()}
         />
-        <LocationPicker />
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            alignContent: "center",
-          }}
-        >
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={onPrevPage}>
-              <Text style={styles.buttonText}>Back</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={handleCreateProduct}
-            >
-              <Text style={styles.buttonText}>Add!</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        {/* {shouldCallGptRequester && <GptRequester desc={tempDescription} />} */}
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -123,16 +115,26 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
     width: width,
-    borderWidth: 2,
+    height: "100%",
+    backgroundColor: "white",
   },
   label: {
     fontWeight: "bold",
     marginBottom: 8,
+    fontSize: 16,
   },
   input: {
     height: 40,
     borderWidth: 1,
-    borderColor: "gray",
+    borderColor: "#97B858",
+    borderRadius: 8,
+    marginBottom: 16,
+    paddingHorizontal: 10,
+  },
+  inputDesc: {
+    height: 90,
+    borderWidth: 1,
+    borderColor: "#97B858",
     borderRadius: 8,
     marginBottom: 16,
     paddingHorizontal: 10,
@@ -154,6 +156,41 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
   },
+  map: {
+    width: "100%",
+    height: "100%",
+  },
 });
 
 export default AddInitDataComp;
+{
+  /* <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            alignContent: "center",
+          }}
+        >
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={onPrevPage}>
+              <Text style={styles.buttonText}>Back</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleCreateProduct}
+            >
+              <Text style={styles.buttonText}>Add!</Text>
+            </TouchableOpacity>
+          </View>
+        </View> */
+}
+{
+  /* {shouldCallGptRequester && <GptRequester desc={tempDescription} />} */
+}
+
+{
+  /* <LocationPicker /> */
+}

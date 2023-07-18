@@ -6,7 +6,6 @@ import {
   Text,
   Dimensions,
   StyleSheet,
-  Button,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Amplify, Storage } from "aws-amplify";
@@ -14,8 +13,9 @@ import awsconfig from "../../aws-exports";
 import { TryContext } from "../../context/tryoutCont";
 import ImagePickerModal from "./modal";
 import { fetchImage } from "./functions";
+
 import ImagePile from "./imagePile";
-import { useRoute } from "@react-navigation/native";
+import ListFooter from "./listFooterComp";
 import DraggableFlatList from "react-native-draggable-flatlist";
 import { MaterialIcons } from "@expo/vector-icons";
 
@@ -28,17 +28,12 @@ interface ImagePickerProps {
   onPrevPage: () => void;
 }
 
-function ImagePickerExample({
-  onNextPage,
-  onPrevPage,
-  props,
-}: ImagePickerProps) {
+function ImagePickerExample({ onNextPage, onPrevPage }: ImagePickerProps) {
   const [modalVisible, setModalVisible] = useState(false);
   const [image, setImage] = useState([]);
   const [imageAsset, setImageAsset] = useState([]);
   const { setImageUrls, categories } = useContext(TryContext);
-  const route = useRoute();
-  const { handleSetAllImagesGathered, setAllImagesGathered } = route.params;
+
   const deleteByValue = (value) => {
     setImage((oldValues) => {
       return oldValues.filter((img) => img !== value);
@@ -48,12 +43,6 @@ function ImagePickerExample({
       return oldAssets.filter((asset) => asset.uri !== value);
     });
   };
-
-  useEffect(() => {
-    if (imageAsset.length > 0) {
-      setAllImagesGathered(true);
-    }
-  }, [imageAsset]);
 
   useEffect(() => {
     console.log(imageAsset);
@@ -142,42 +131,17 @@ function ImagePickerExample({
     onNextPage();
   };
 
-  const isButtonDisabled = image.length <= 5;
-  const shouldShowListFooter = imageAsset.length <= 4;
+  const isButtonDisabled = image.length <= 0;
+  const shouldShowListFooter = imageAsset.length <= 5;
 
   return (
     <View style={styles.container}>
       <View>
-        {shouldShowListFooter && (
+        {/* {isButtonDisabled && (
           <View>
-            <TouchableOpacity
-              onPress={showModal}
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                padding: 10,
-                borderWidth: 1,
-                borderRadius: 15,
-                borderColor: "#326273",
-                backgroundColor: "#97B858",
-                marginHorizontal: 12,
-                marginTop: 5,
-              }}
-            >
-              <MaterialIcons name="add-a-photo" size={24} color="black" />
-              <Text
-                style={{
-                  marginLeft: 10,
-                  color: "black",
-                  fontSize: 16,
-                  fontWeight: "bold",
-                }}
-              >
-                Add photo
-              </Text>
-            </TouchableOpacity>
+            <ListFooter onPressA={showModal} />
           </View>
-        )}
+        )} */}
       </View>
       <ImagePickerModal
         isVisible={modalVisible}
@@ -201,8 +165,34 @@ function ImagePickerExample({
             <ImagePile img={item.uri} deleteByValue={deleteByValue} />
           )}
           onDragEnd={({ data }) => reorderImages(data)}
-          style={styles.flatListView}
         />
+      </View>
+      <View style={styles.bottomButtonsContainer}>
+        {/* <View style={styles.button}>
+          <TouchableOpacity onPress={onPrevPage}>
+            <Text style={styles.buttonText}>Back</Text>
+          </TouchableOpacity>
+        </View> */}
+        {/* {!isButtonDisabled && (
+          <View style={styles.button}>
+            <TouchableOpacity onPress={showModal}>
+              <MaterialIcons name="add-a-photo" size={24} color="white" />
+            </TouchableOpacity>
+          </View>
+        )} */}
+        {/* <View
+          style={[
+            styles.button,
+            isButtonDisabled && styles.buttonContainerDisabled,
+          ]}
+        >
+          <TouchableOpacity
+            onPress={handleNextButton}
+            disabled={isButtonDisabled}
+          >
+            <Text style={styles.buttonText}>Next</Text>
+          </TouchableOpacity>
+        </View> */}
       </View>
     </View>
   );
@@ -210,11 +200,25 @@ function ImagePickerExample({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
-    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    // height: height,
   },
-  flatListView: {},
-  image: {},
+  scrollView: {
+    height: height * 0.3,
+  },
+  imageContainer: {
+    flex: 1,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    paddingTop: 10,
+  },
+  image: {
+    height: height * 0.5,
+    width: (width - 20) / 2,
+    resizeMode: "cover",
+  },
   imageInfoContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -229,7 +233,39 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
   },
-
+  actionButtonsContainer: {
+    flexDirection: "row",
+  },
+  addButton: {
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    borderRadius: 5,
+    width: 30,
+    height: 30,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  bottomButtonsContainer: {
+    position: "absolute",
+    bottom: 30,
+    justifyContent: "space-between",
+    flexDirection: "row",
+    width: width,
+  },
+  button: {
+    marginHorizontal: 10,
+    backgroundColor: "#4f992e",
+    padding: 15,
+    borderRadius: 15,
+    width: 100,
+    alignItems: "center",
+  },
+  buttonText: {
+    fontSize: 18,
+    color: "white",
+  },
+  buttonContainerDisabled: {
+    opacity: 0.5,
+  },
   listFooterContainer: {
     position: "absolute",
     right: 10,

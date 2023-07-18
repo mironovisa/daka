@@ -21,7 +21,7 @@ import { Entypo } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import OtherUserProfile from "../screens/OtherUserProfileScreen";
 import ChatScreen from "../screens/ChatScreen";
-
+import { ChooseLanguage } from "../screens/LanguageChoosingScreen/LanguageScreen";
 const Stack = createStackNavigator();
 const { height, width } = Dimensions.get("window");
 
@@ -167,6 +167,15 @@ function MyStack({ navigation, route }) {
       <Stack.Screen
         name="CategoryFiltering"
         component={CategoryFilterScreen}
+        options={{
+          header: () => (
+            <MainHeaderComponent isMainPage={false} handlePress={handlePress} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="LanguageChosing"
+        component={ChooseLanguage}
         options={{
           header: () => (
             <MainHeaderComponent isMainPage={false} handlePress={handlePress} />

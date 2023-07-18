@@ -6,6 +6,7 @@ import CategoryPicker from "./CategoryPicker";
 import MyComponent from "./store";
 import ImagePicker from "../../components/ImagePicker";
 import AddInitDataComp from "./addItemPhotoNameDescPriceComp";
+import RedirectionCategoryUtil from "../../util/redirectionCategoryUtil";
 
 const MyPager = () => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -48,10 +49,16 @@ const MyPager = () => {
         <CategoryPicker onNextPage={handleNextPage} />
       </View>
       <View key="2" style={styles.page}>
-        <ImagePicker onNextPage={handleNextPage} onPrevPage={handleBackPage} />
+        <RedirectionCategoryUtil onNextPage={handleNextPage} />
       </View>
       <View key="3" style={styles.page}>
-        <AddInitDataComp onNextPage={handleNextPage} onPrevPage={handleBackPage}/>
+        <ImagePicker onNextPage={handleNextPage} onPrevPage={handleBackPage} />
+      </View>
+      <View key="4" style={styles.page}>
+        <AddInitDataComp
+          onNextPage={handleNextPage}
+          onPrevPage={handleBackPage}
+        />
       </View>
     </PagerView>
   );

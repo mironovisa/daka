@@ -7,12 +7,9 @@ import {
   StyleProp,
   ViewStyle,
   TextStyle,
-  TextInput,
 } from "react-native";
 import { TryContext } from "../../context/tryoutCont";
 import { Auth } from "aws-amplify";
-import categoriesData from "../../db/categories";
-import RNPickerSelect from "react-native-picker-select";
 import {
   CategoryPicker,
   SubcategoryPicker,
@@ -23,7 +20,6 @@ interface FirstPageProps {
   containerStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
 }
-
 interface Category {
   id: string;
   name: string;
@@ -33,30 +29,33 @@ interface Category {
   subcategoryInner: string;
   subcategories: Subcategory[];
 }
-
 interface Subcategory {
   id: string;
   name: string;
 }
-
-const FirstPage = ({
+const CategoriesPicker = ({
   onNextPage,
   containerStyle,
   textStyle,
-}: FirstPageProps) => {
+  navigation,
+  isNextButtonDisabled,
+  setIsNextButtonDisabled,
+  setPickedCategory,
+}: FirstPageProps & {
+  navigation: any;
+  isNextButtonDisabled: boolean;
+  setIsNextButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+  setPickedCategory: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   const {
-    value,
-    setValue,
-    userSub,
     setUserSub,
     category,
     subcategory,
     setCategory,
     setSubcategory,
-    categories,
     setCategories,
   } = useContext(TryContext);
-  const [inputValue, setInputValue] = useState("");
+
   const [categoryInner, setCategoryInner] = useState<Category | null>(null);
   const [subcategoryInner, setSubcategoryInner] = useState<Subcategory | null>(
     null
@@ -78,14 +77,19 @@ const FirstPage = ({
     } else {
       setCategory(null); // Set category to null when a blank option is selected
     }
+
+    setIsNextButtonDisabled(!categoryInner || !subcategoryInner);
   };
 
   const handleSetSubcategory = () => {
     if (subcategoryInner) {
       setSubcategory(subcategoryInner.id);
+      setPickedCategory(subcategoryInner.id);
     } else {
       setSubcategory(null); // Set subcategory to null when a blank option is selected
     }
+
+    setIsNextButtonDisabled(!categoryInner || !subcategoryInner);
   };
 
   const handleButtonClick = () => {
@@ -108,36 +112,24 @@ const FirstPage = ({
 
   return (
     <View style={[styles.container, containerStyle]}>
-      <Text style={[styles.text, textStyle]}>Choose the category:</Text>
-      <View style={styles.input}>
-        <CategoryPicker
-          categoryInner={categoryInner}
-          setCategoryInner={setCategoryInner}
-          handleSetCategory={handleSetCategory}
-        />
-      </View>
-      {category && (
+      <View style={{ flex: 2 }}>
         <View style={styles.input}>
-          <SubcategoryPicker
+          <CategoryPicker
             categoryInner={categoryInner}
-            subcategoryInner={subcategoryInner}
-            setSubcategoryInner={setSubcategoryInner}
-            handleSetSubcategory={handleSetSubcategory}
+            setCategoryInner={setCategoryInner}
+            handleSetCategory={handleSetCategory}
           />
         </View>
-      )}
-      <View
-        style={[
-          styles.buttonContainer,
-          isButtonDisabled && styles.buttonContainerDisabled,
-        ]}
-      >
-        <TouchableOpacity
-          onPress={handleButtonClick}
-          disabled={isButtonDisabled}
-        >
-          <Text style={styles.buttonText}>Next</Text>
-        </TouchableOpacity>
+        {category && (
+          <View style={styles.input}>
+            <SubcategoryPicker
+              categoryInner={categoryInner}
+              subcategoryInner={subcategoryInner}
+              setSubcategoryInner={setSubcategoryInner}
+              handleSetSubcategory={handleSetSubcategory}
+            />
+          </View>
+        )}
       </View>
     </View>
   );
@@ -146,23 +138,28 @@ const FirstPage = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-start",
-    paddingTop: 50,
+    justifyContent: "center",
+    alignContent: "center",
+    alignItems: "center",
+    paddingTop: 30,
+    backgroundColor: "white",
   },
   text: {
-    fontSize: 24,
+    fontSize: 22,
     marginBottom: 16,
+    padding: 10,
   },
   buttonText: {
     fontSize: 18,
     color: "white",
   },
   input: {
-    width: "80%",
+    width: "100%",
     height: 40,
-    borderColor: "gray",
+    borderColor: "#97B858",
     borderWidth: 1,
-    paddingHorizontal: 10,
+    borderRadius: 15,
+    // paddingHorizontal: 10,
     marginBottom: 10,
   },
   buttonContainer: {
@@ -181,4 +178,24 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FirstPage;
+export default CategoriesPicker;
+
+{
+  /* <View
+        style={[
+          styles.buttonContainer,
+          isButtonDisabled && styles.buttonContainerDisabled,
+        ]}
+      > */
+}
+{
+  /* <TouchableOpacity
+          onPress={handleButtonClick}
+          disabled={isButtonDisabled}
+        >
+          <Text style={styles.buttonText}>Next</Text>
+        </TouchableOpacity> */
+}
+{
+  /* </View> */
+}
