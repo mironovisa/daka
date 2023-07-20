@@ -1,67 +1,32 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  StyleProp,
-  ViewStyle,
-  TextStyle,
-} from "react-native";
+import { View, StyleSheet } from "react-native";
 import { TryContext } from "../../context/tryoutCont";
 import { Auth } from "aws-amplify";
 import {
   CategoryPicker,
   SubcategoryPicker,
 } from "../../components/CategoryPicker";
+import { useRoute } from "@react-navigation/native";
 
-interface FirstPageProps {
-  onNextPage: () => void;
-  containerStyle?: StyleProp<ViewStyle>;
-  textStyle?: StyleProp<TextStyle>;
-}
 interface Category {
   id: string;
   name: string;
-  url: string;
-  createdAt: string;
-  updatedAt: string;
-  subcategoryInner: string;
   subcategories: Subcategory[];
 }
 interface Subcategory {
   id: string;
   name: string;
 }
-const CategoriesPicker = ({
-  onNextPage,
-  containerStyle,
-  textStyle,
-  navigation,
-  isNextButtonDisabled,
-  setIsNextButtonDisabled,
-  setPickedCategory,
-}: FirstPageProps & {
-  navigation: any;
-  isNextButtonDisabled: boolean;
-  setIsNextButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
-  setPickedCategory: React.Dispatch<React.SetStateAction<string>>;
-}) => {
-  const {
-    setUserSub,
-    category,
-    subcategory,
-    setCategory,
-    setSubcategory,
-    setCategories,
-  } = useContext(TryContext);
+const CategoriesPicker = () => {
+  const { setUserSub, setCategory, setSubcategory } = useContext(TryContext);
 
   const [categoryInner, setCategoryInner] = useState<Category | null>(null);
   const [subcategoryInner, setSubcategoryInner] = useState<Subcategory | null>(
     null
   );
-  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
 
+  const route = useRoute();
+  const { setIsNextButtonDisabled, setPickedCategory } = route.params;
   const fetchUserSub = async () => {
     const userData = await Auth.currentAuthenticatedUser();
     setUserSub(userData.attributes.sub);
@@ -75,7 +40,7 @@ const CategoriesPicker = ({
     if (categoryInner) {
       setCategory(categoryInner.id);
     } else {
-      setCategory(null); // Set category to null when a blank option is selected
+      setCategory(null);
     }
 
     setIsNextButtonDisabled(!categoryInner || !subcategoryInner);
@@ -86,32 +51,14 @@ const CategoriesPicker = ({
       setSubcategory(subcategoryInner.id);
       setPickedCategory(subcategoryInner.id);
     } else {
-      setSubcategory(null); // Set subcategory to null when a blank option is selected
+      setSubcategory(null);
     }
 
     setIsNextButtonDisabled(!categoryInner || !subcategoryInner);
   };
 
-  const handleButtonClick = () => {
-    const newSelectedCategories: Category[] = [];
-
-    if (categoryInner) {
-      newSelectedCategories.push(categoryInner);
-    }
-
-    if (subcategoryInner) {
-      newSelectedCategories.push(subcategoryInner);
-    }
-
-    setSelectedCategories(newSelectedCategories);
-    setCategories(newSelectedCategories.map((category) => category.id));
-    onNextPage();
-  };
-
-  const isButtonDisabled = !category || !subcategory;
-
   return (
-    <View style={[styles.container, containerStyle]}>
+    <View style={styles.container}>
       <View style={{ flex: 2 }}>
         <View style={styles.input}>
           <CategoryPicker
@@ -120,7 +67,7 @@ const CategoriesPicker = ({
             handleSetCategory={handleSetCategory}
           />
         </View>
-        {category && (
+        {categoryInner && (
           <View style={styles.input}>
             <SubcategoryPicker
               categoryInner={categoryInner}
@@ -158,8 +105,8 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: "#97B858",
     borderWidth: 1,
-    borderRadius: 15,
-    // paddingHorizontal: 10,
+    borderRadius: 5,
+    paddingHorizontal: 10,
     marginBottom: 10,
   },
   buttonContainer: {
@@ -179,23 +126,3 @@ const styles = StyleSheet.create({
 });
 
 export default CategoriesPicker;
-
-{
-  /* <View
-        style={[
-          styles.buttonContainer,
-          isButtonDisabled && styles.buttonContainerDisabled,
-        ]}
-      > */
-}
-{
-  /* <TouchableOpacity
-          onPress={handleButtonClick}
-          disabled={isButtonDisabled}
-        >
-          <Text style={styles.buttonText}>Next</Text>
-        </TouchableOpacity> */
-}
-{
-  /* </View> */
-}

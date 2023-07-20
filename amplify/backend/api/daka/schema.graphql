@@ -4,17 +4,6 @@ type Category @model @auth(rules: [{ allow: public }]) {
   products: [Product] @manyToMany(relationName: "ProductCategories")
 }
 
-type Product @model @auth(rules: [{ allow: public }]) {
-  id: ID!
-  name: String
-  description: String
-  city: String
-  price: Float
-  images: [String]
-  userSub: String
-  categories: [Category] @manyToMany(relationName: "ProductCategories")
-}
-
 type User @model @auth(rules: [{ allow: public }]) {
   id: ID!
   userSub: String!
@@ -33,4 +22,15 @@ type Chat @model @auth(rules: [{ allow: public }]) {
   sellerId: String!
   buyerId: String!
   messages: [Message] @hasMany
+}
+
+type Product @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String
+  description: String
+  city: String
+  price: Float
+  images: [String]
+  userSub: String
+  categories: [Category] @manyToMany(relationName: "ProductCategories")
 }

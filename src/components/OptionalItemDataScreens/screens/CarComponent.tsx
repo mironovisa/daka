@@ -1,53 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
   StyleSheet,
   Dimensions,
   TextInput,
-  TouchableOpacity,
   Keyboard,
   Switch,
 } from "react-native";
+import { TryContext } from "../../../context/tryoutCont";
 import RNPickerSelect from "react-native-picker-select";
 import carBrands from "../data/cars.en.json";
-import styles from "@app/components/CategoryFilter/styles";
 import { ScrollView } from "react-native-gesture-handler";
 import { SegmentedButtons } from "react-native-paper";
 const { width, height } = Dimensions.get("screen");
 
 const CarComponent = ({ setAllDataGathered }) => {
-  const [carData, setCarData] = useState({
-    selectedBrand: "",
-    selectedModel: "",
-    carYear: "",
-    carOwners: "",
-    transmission: "",
-    fuelType: "",
-    mileage: "",
-    cdPlayer: false,
-    auxBuiltIn: false,
-    mp3Player: false,
-    radio: false,
-    usbPort: false,
-    tvPlayer: false,
-    bluetooth: false,
-    gpsNavigation: false,
-    wheelMediaControls: false,
-    powerSteering: "",
-    climateControl: "",
-    interiorType: "",
-    powerWindows: "",
-    powerDrive: "",
-    drivingAssistance: "",
-    multimediaNavigation: "", // Added field for Multimedia and Navigation
-    audioSystem: "", // Added field for Audio System
-    headlights: "", // Added field for Headlights
-    additionalLighting: "", // Added field for Additional Lighting
-    tiresAndWheels: "", // Added field for Tires and Wheels
-  });
-  const [value, setValue] = React.useState("");
-  const [isEnabled, setIsEnabled] = useState(false);
+  const { carData, setCarData } = useContext(TryContext);
+
   const years = Array.from(
     { length: 2023 - 1950 + 1 },
     (_, index) => 2023 - index
@@ -81,10 +51,6 @@ const CarComponent = ({ setAllDataGathered }) => {
       setAllDataGathered(true);
     }
   }, [carData, setAllDataGathered]);
-
-  const handleRequiredValuesGathered = () => {
-    
-  }
 
   const handlePowerSteeringChange = (value) => {
     setCarData((prevState) => ({
@@ -168,47 +134,7 @@ const CarComponent = ({ setAllDataGathered }) => {
       climateControl: value,
     }));
   };
-  const handleDrivingAssistanceChoose = (value) => {
-    setCarData((prevState) => ({
-      ...prevState,
-      drivingAssistance: value,
-    }));
-  };
 
-  const handleMultimediaNavigationChoose = (value) => {
-    setCarData((prevState) => ({
-      ...prevState,
-      multimediaNavigation: value,
-    }));
-  };
-
-  const handleAudioSystemChoose = (value) => {
-    setCarData((prevState) => ({
-      ...prevState,
-      audioSystem: value,
-    }));
-  };
-
-  const handleHeadlightsChoose = (value) => {
-    setCarData((prevState) => ({
-      ...prevState,
-      headlights: value,
-    }));
-  };
-
-  const handleAdditionalLightingChoose = (value) => {
-    setCarData((prevState) => ({
-      ...prevState,
-      additionalLighting: value,
-    }));
-  };
-
-  const handleTiresAndWheelsChoose = (value) => {
-    setCarData((prevState) => ({
-      ...prevState,
-      tiresAndWheels: value,
-    }));
-  };
   const handleCdChange = () => {
     setCarData((prevState) => ({
       ...prevState,
@@ -245,6 +171,38 @@ const CarComponent = ({ setAllDataGathered }) => {
       bluetooth: !prevState.bluetooth,
     }));
   };
+  const handleAutoPark = () => {
+    setCarData((prevState) => ({
+      ...prevState,
+      autoPark: !prevState.autoPark,
+    }));
+  };
+  const handleRainSensor = () => {
+    setCarData((prevState) => ({
+      ...prevState,
+      rainSensor: !prevState.rainSensor,
+    }));
+  };
+
+  const handleLightSensor = () => {
+    setCarData((prevState) => ({
+      ...prevState,
+      lightSensor: !prevState.lightSensor,
+    }));
+  };
+  const handleParkingSensors = () => {
+    setCarData((prevState) => ({
+      ...prevState,
+      parkingSensors: !prevState.parkingSensors,
+    }));
+  };
+
+  const handleBlindSpotMonitor = () => {
+    setCarData((prevState) => ({
+      ...prevState,
+      blindSpotMonitor: !prevState.blindSpotMonitor,
+    }));
+  };
 
   const handleGPSChange = () => {
     setCarData((prevState) => ({
@@ -252,12 +210,7 @@ const CarComponent = ({ setAllDataGathered }) => {
       gpsNavigation: !prevState.gpsNavigation,
     }));
   };
-  const handleTVChange = () => {
-    setCarData((prevState) => ({
-      ...prevState,
-      tvPlayer: !prevState.tvPlayer,
-    }));
-  };
+
   const handleMediaControlsChange = () => {
     setCarData((prevState) => ({
       ...prevState,
@@ -651,49 +604,121 @@ const CarComponent = ({ setAllDataGathered }) => {
                       label: "Front Seats",
                     },
                     { value: "Rear Seats", label: "Rear Seats" },
-                    { value: "Mirrors", label: "Mirrors" },
                   ]}
                 />
               </View>
               <View>
                 <Text style={pickerSelectStyles.headings}>
-                  Driving Assistance:
+                  Driving Assistance
                 </Text>
-                <SegmentedButtons
-                  value={carData.drivingAssistance}
-                  onValueChange={handleDrivingAssistanceChoose}
-                  buttons={[
-                    {
-                      value: "Auto Parking",
-                      label: "Auto Parking",
-                    },
-
-                    { value: "Parking Sensors", label: "Parking Sensors" },
-                  ]}
-                  style={{
-                    marginTop: 2,
-                    marginBottom: 2,
-                  }}
-                />
-                <SegmentedButtons
-                  value={carData.drivingAssistance}
-                  onValueChange={handleDrivingAssistanceChoose}
-                  buttons={[
-                    {
-                      value: "Blind Spot Monitoring",
-                      label: "Blind Spot Monitoring",
-                    },
-                    {
-                      value: "Rain Sensor",
-                      label: "Rain Sensor",
-                    },
-                  ]}
-                />
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginHorizontal: 10,
+                  marginBottom: 12,
+                }}
+              >
+                <Text style={{ fontSize: 16 }}>Automatic Parking</Text>
+                <View style={{ marginLeft: 26 }}>
+                  <Switch
+                    trackColor={{ false: "#767577", true: "#81b0ff" }}
+                    thumbColor={carData.autoPark ? "#f5dd4b" : "#f4f3f4"}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={handleAutoPark}
+                    value={carData.autoPark}
+                  />
+                </View>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginHorizontal: 10,
+                  marginBottom: 12,
+                }}
+              >
+                <Text style={{ fontSize: 16 }}>Rain Sensor</Text>
+                <View style={{ marginLeft: 26 }}>
+                  <Switch
+                    trackColor={{ false: "#767577", true: "#81b0ff" }}
+                    thumbColor={carData.rainSensor ? "#f5dd4b" : "#f4f3f4"}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={handleRainSensor}
+                    value={carData.rainSensor}
+                  />
+                </View>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginHorizontal: 10,
+                  marginBottom: 12,
+                }}
+              >
+                <Text style={{ fontSize: 16 }}>Light Sensor</Text>
+                <View style={{ marginLeft: 26 }}>
+                  <Switch
+                    trackColor={{ false: "#767577", true: "#81b0ff" }}
+                    thumbColor={carData.lightSensor ? "#f5dd4b" : "#f4f3f4"}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={handleLightSensor}
+                    value={carData.lightSensor}
+                  />
+                </View>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginHorizontal: 10,
+                  marginBottom: 12,
+                }}
+              >
+                <Text style={{ fontSize: 16 }}>Parking Sensors</Text>
+                <View style={{ marginLeft: 26 }}>
+                  <Switch
+                    trackColor={{ false: "#767577", true: "#81b0ff" }}
+                    thumbColor={carData.parkingSensors ? "#f5dd4b" : "#f4f3f4"}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={handleParkingSensors}
+                    value={carData.parkingSensors}
+                  />
+                </View>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginHorizontal: 10,
+                  marginBottom: 12,
+                }}
+              >
+                <Text style={{ fontSize: 16 }}>
+                  Blind Spot Monitoring System
+                </Text>
+                <View style={{ marginLeft: 26 }}>
+                  <Switch
+                    trackColor={{ false: "#767577", true: "#81b0ff" }}
+                    thumbColor={
+                      carData.blindSpotMonitor ? "#f5dd4b" : "#f4f3f4"
+                    }
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={handleBlindSpotMonitor}
+                    value={carData.blindSpotMonitor}
+                  />
+                </View>
               </View>
             </View>
           )}
         </View>
-        <View>{/* <Text style={{ margin: 150 }}>End</Text> */}</View>
       </ScrollView>
     </View>
   );
@@ -712,7 +737,7 @@ const pickerSelectStyles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    padding: 10,
+    padding: 7,
     fontWeight: "bold",
   },
   inputHalves: {
@@ -731,31 +756,29 @@ const pickerSelectStyles = StyleSheet.create({
     fontSize: 16,
     paddingVertical: 12,
     paddingHorizontal: 10,
-    borderRadius: 15,
+    borderRadius: 5,
     borderWidth: 1,
     borderColor: "#97B858",
     color: "black",
     paddingRight: 30,
-    backgroundColor: "#e3e3e3",
+
     marginBottom: 10, // Add any spacing you want between the TextInput and other elements
   },
   inputIOS: {
     fontSize: 16,
     paddingVertical: 12,
     paddingHorizontal: 10,
-    borderRadius: 15,
     borderWidth: 1,
+    borderRadius: 5,
     borderColor: "#97B858",
     color: "black",
-    // to ensure the text is never behind the icon
-    backgroundColor: "#e3e3e3", // change the background color if needed// set a minimum width for the input on iOS
   },
   inputAndroid: {
     fontSize: 16,
     paddingHorizontal: 10,
     paddingVertical: 8,
+    borderRadius: 5,
     color: "black", // to ensure the text is never behind the icon
-    backgroundColor: "#FFFFFC", // change the background color if needed // set a minimum width for the input on Android
   },
 });
 export default CarComponent;

@@ -1,17 +1,15 @@
 import React, { useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import PostScreen from "../screens/PostScreen";
-import { View, Text, TouchableOpacity } from "react-native";
-import { Entypo } from "@expo/vector-icons";
+import { Text, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import AddItemScreen from "../screens/AddItemScreen";
 import CategoriesPicker from "../screens/AddItemScreen/CategoryPicker";
 import OptionalData from "../components/OptionalItemDataScreens/OptionalData";
 import ImagePickerExample from "../components/ImagePicker";
 import AddTitle from "../screens/AddItemScreen/addItemPhotoNameDescPriceComp";
 import LocationPicker from "../screens/AddItemScreen/LocationPicker";
-import { additionalData } from "@app/db/additionalData";
 const Stack = createStackNavigator();
+// i can not hear you!(
+
 
 const AddItemNavigator = ({ isMainPage = true }) => {
   const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
@@ -60,6 +58,7 @@ const AddItemNavigator = ({ isMainPage = true }) => {
     <Stack.Navigator>
       <Stack.Screen
         name="ChooseCategory"
+        component={CategoriesPicker}
         options={({ navigation }) => ({
           headerTitle: () => <Text>Pick a category</Text>,
           headerRight: () => (
@@ -78,16 +77,12 @@ const AddItemNavigator = ({ isMainPage = true }) => {
             </TouchableOpacity>
           ),
         })}
-      >
-        {() => (
-          <CategoriesPicker
-            onNextPage={handleBackClick}
-            isNextButtonDisabled={isNextButtonDisabled}
-            setIsNextButtonDisabled={setIsNextButtonDisabled}
-            setPickedCategory={setPickedCategory}
-          />
-        )}
-      </Stack.Screen>
+        initialParams={{
+          isNextButtonDisabled: isNextButtonDisabled,
+          setIsNextButtonDisabled: setIsNextButtonDisabled,
+          setPickedCategory: setPickedCategory,
+        }}
+      />
       <Stack.Screen
         name="OptionalData"
         component={OptionalData}

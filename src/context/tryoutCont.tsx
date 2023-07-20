@@ -1,6 +1,37 @@
 import React, { createContext, useState, ReactNode } from "react";
 
+interface CarData {
+  selectedBrand: string;
+  selectedModel: string;
+  carYear: string;
+  carOwners: string;
+  transmission: string;
+  fuelType: string;
+  mileage: string;
+  cdPlayer: boolean;
+  auxBuiltIn: boolean;
+  mp3Player: boolean;
+  radio: boolean;
+  usbPort: boolean;
+  tvPlayer: boolean;
+  bluetooth: boolean;
+  gpsNavigation: boolean;
+  wheelMediaControls: boolean;
+  powerSteering: string;
+  climateControl: string;
+  interiorType: string;
+  powerWindows: string;
+  powerDrive: string;
+  autoPark: boolean;
+  rainSensor: boolean;
+  lightSensor: boolean;
+  parkingSensors: boolean;
+  blindSpotMonitor: boolean;
+}
+
 interface TryContextProps {
+  address: string;
+  setAddress: React.Dispatch<React.SetStateAction<string>>;
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
   userSub: string;
@@ -22,6 +53,18 @@ interface TryContextProps {
   handleImageUriAdd: (uri: string) => void;
   currentUserId: string;
   setCurrentUserId: React.Dispatch<React.SetStateAction<string>>;
+  carData: CarData;
+  setCarData: React.Dispatch<React.SetStateAction<CarData>>;
+  selectedLocation: {
+    lat: number;
+    lng: number;
+  } | null;
+  setSelectedLocation: React.Dispatch<
+    React.SetStateAction<{
+      lat: number;
+      lng: number;
+    } | null>
+  >;
 }
 
 interface TryContextProviderProps {
@@ -29,6 +72,8 @@ interface TryContextProviderProps {
 }
 
 export const TryContext = createContext<TryContextProps>({
+  address: "",
+  setAddress: () => {},
   value: "",
   setValue: () => {},
   userSub: "",
@@ -50,11 +95,43 @@ export const TryContext = createContext<TryContextProps>({
   handleImageUriAdd: () => {},
   currentUserId: "",
   setCurrentUserId: () => {},
+  carData: {
+    selectedBrand: "",
+    selectedModel: "",
+    carYear: "",
+    carOwners: "",
+    transmission: "",
+    fuelType: "",
+    mileage: "",
+    cdPlayer: false,
+    auxBuiltIn: false,
+    mp3Player: false,
+    radio: false,
+    usbPort: false,
+    tvPlayer: false,
+    bluetooth: false,
+    gpsNavigation: false,
+    wheelMediaControls: false,
+    powerSteering: "",
+    climateControl: "",
+    interiorType: "",
+    powerWindows: "",
+    powerDrive: "",
+    autoPark: false,
+    rainSensor: false,
+    lightSensor: false,
+    parkingSensors: false,
+    blindSpotMonitor: false,
+  },
+  setCarData: () => {},
+  selectedLocation: null,
+  setSelectedLocation: () => {},
 });
 
 export const TryContextProvider: React.FC<TryContextProviderProps> = ({
   children,
 }) => {
+  const [address, setAddress] = useState<string>("");
   const [myValue, setMyValue] = useState<string>("");
   const [userSub, setUserSub] = useState<string>("");
   const [categories, setCategories] = useState<string[]>([]);
@@ -65,6 +142,38 @@ export const TryContextProvider: React.FC<TryContextProviderProps> = ({
   const [price, setPrice] = useState<string>("");
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [currentUserId, setCurrentUserId] = useState<string>("");
+  const [selectedLocation, setSelectedLocation] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
+  const [carData, setCarData] = useState<CarData>({
+    selectedBrand: "",
+    selectedModel: "",
+    carYear: "",
+    carOwners: "",
+    transmission: "",
+    fuelType: "",
+    mileage: "",
+    cdPlayer: false,
+    auxBuiltIn: false,
+    mp3Player: false,
+    radio: false,
+    usbPort: false,
+    tvPlayer: false,
+    bluetooth: false,
+    gpsNavigation: false,
+    wheelMediaControls: false,
+    powerSteering: "",
+    climateControl: "",
+    interiorType: "",
+    powerWindows: "",
+    powerDrive: "",
+    autoPark: false,
+    rainSensor: false,
+    lightSensor: false,
+    parkingSensors: false,
+    blindSpotMonitor: false,
+  });
 
   const updateValue = (newValue: string) => {
     setMyValue(newValue);
@@ -110,6 +219,12 @@ export const TryContextProvider: React.FC<TryContextProviderProps> = ({
         handleImageUriAdd,
         currentUserId,
         setCurrentUserId,
+        carData,
+        setCarData,
+        selectedLocation,
+        setSelectedLocation,
+        address,
+        setAddress,
       }}
     >
       {children}

@@ -80,13 +80,12 @@ export const SubcategoryPicker = ({
 
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
-    borderRadius: 15,
     fontSize: 16,
     paddingVertical: 12,
     paddingHorizontal: 10,
     color: "black",
     paddingRight: 30, // to ensure the text is never behind the icon
-    backgroundColor: "#e3e3e3", // change the background color if needed
+    // change the background color if needed
     width: width * 0.9, // set a minimum width for the input on iOS
   },
   inputAndroid: {
@@ -95,7 +94,7 @@ const pickerSelectStyles = StyleSheet.create({
     paddingVertical: 8,
     color: "black",
     paddingRight: 30, // to ensure the text is never behind the icon
-    backgroundColor: "#FFFFFC", // change the background color if needed
+    // change the background color if needed
     width: width * 0.9, // set a minimum width for the input on Android
   },
 });

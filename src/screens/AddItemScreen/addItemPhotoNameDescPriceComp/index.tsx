@@ -3,19 +3,15 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   ScrollView,
-  TouchableOpacity,
   StyleSheet,
   Dimensions,
   Keyboard,
 } from "react-native";
-import MapView from "react-native-maps";
-import { TryContext } from "../../../context/tryoutCont";
-import { DataStore, Auth } from "aws-amplify";
-import { Product, Category, ProductCategories } from "../../../models";
 import { useRoute } from "@react-navigation/native";
 import LocationPicker from "../LocationPicker";
+import { TryContext } from "../../../context/tryoutCont";
+import MapView, { Marker } from "react-native-maps";
 const { width, height } = Dimensions.get("screen");
 
 interface AddInitDataProps {
@@ -23,12 +19,15 @@ interface AddInitDataProps {
   onPrevPage: () => void;
 }
 
-const AddInitDataComp = ({ onNextPage, onPrevPage }: AddInitDataProps) => {
-  // const { name, setName, price, setPrice, categories, imageUrls } =
-  //   useContext(TryContext);
+const AddTitle = ({ onNextPage, onPrevPage }: AddInitDataProps) => {
+  const { selectedLocation } = useContext(TryContext);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [markerCoords, setMarkerCoords] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
 
   const route = useRoute();
   const { setTitleAndDescGathered } = route.params;
@@ -38,74 +37,78 @@ const AddInitDataComp = ({ onNextPage, onPrevPage }: AddInitDataProps) => {
       setTitleAndDescGathered(true);
     }
   }, [title, description, price]);
-  const handleCreateProduct = async () => {
-    try {
-      const userData = await Auth.currentAuthenticatedUser();
-      const userId = userData.attributes.sub;
-      console.log("The userId is " + userId);
-      const product = await DataStore.save(
-        new Product({
-          name,
-          description: tempDescription, // Use the temporary description
-          price: parseFloat(price),
-          city: "default",
-          images: imageUrls,
-          userSub: userId,
-        })
-      );
 
-      console.log("Product created:", product);
-
-      // Create the product categories using DataStore.mutate
-      for (const categoryId of categories) {
-        const productCategory = await DataStore.save(
-          new ProductCategories({
-            categoryId,
-            productId: product.id,
-          })
-        );
-        console.log("Product category created:", productCategory);
-      }
-    } catch (error) {
-      console.log("Error creating product:", error);
+  useEffect(() => {
+    if (selectedLocation) {
+      setMarkerCoords({
+        latitude: selectedLocation.lat,
+        longitude: selectedLocation.lng,
+      });
     }
-  };
+  }, [selectedLocation]);
 
   return (
     <View style={styles.container}>
-      <ScrollView style={{ marginBottom: 100 }}>
-        <LocationPicker />
-        <Text style={styles.label}>Title</Text>
-        <TextInput
-          value={title}
-          onChangeText={setTitle}
-          placeholder="Enter the title"
-          style={styles.input}
-          returnKeyType="done" // Add returnKeyType prop with "done" value
-          onSubmitEditing={() => Keyboard.dismiss()}
-        />
+      <LocationPicker />
+      <ScrollView>
+        <View>
+          <Text style={styles.label}>Title</Text>
+          <TextInput
+            value={title}
+            onChangeText={setTitle}
+            placeholder="Enter the title"
+            style={styles.input}
+            returnKeyType="done" // Add returnKeyType prop with "done" value
+            onSubmitEditing={() => Keyboard.dismiss()}
+          />
 
-        <Text style={styles.label}>Description</Text>
-        <TextInput
-          value={description}
-          onChangeText={setDescription}
-          placeholder="Enter the description"
-          style={styles.inputDesc}
-          returnKeyType="done" // Add returnKeyType prop with "done" value
-          onSubmitEditing={() => Keyboard.dismiss()}
-          multiline
-        />
+          <Text style={styles.label}>Description</Text>
+          <TextInput
+            value={description}
+            onChangeText={setDescription}
+            placeholder="Enter the description"
+            style={styles.inputDesc}
+            returnKeyType="done" // Add returnKeyType prop with "done" value
+            onSubmitEditing={() => Keyboard.dismiss()}
+            multiline
+          />
 
-        <Text style={styles.label}>Price</Text>
-        <TextInput
-          value={price}
-          onChangeText={setPrice}
-          placeholder="Enter the price"
-          style={styles.input}
-          keyboardType="number-pad"
-          returnKeyType="done" // Add returnKeyType prop with "done" value
-          onSubmitEditing={() => Keyboard.dismiss()}
-        />
+          <Text style={styles.label}>Price</Text>
+          <TextInput
+            value={price}
+            onChangeText={setPrice}
+            placeholder="Enter the price"
+            style={styles.input}
+            keyboardType="number-pad"
+            returnKeyType="done" // Add returnKeyType prop with "done" value
+            onSubmitEditing={() => Keyboard.dismiss()}
+          />
+        </View>
+        <View style={styles.mapContainer}>
+          <MapView
+            style={styles.map}
+            initialRegion={
+              selectedLocation
+                ? {
+                    latitude: selectedLocation.lat,
+                    longitude: selectedLocation.lng,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                  }
+                : null
+            }
+          >
+            {selectedLocation && (
+              <Marker
+                coordinate={{
+                  latitude: selectedLocation.lat,
+                  longitude: selectedLocation.lng,
+                }}
+              />
+            )}
+          </MapView>
+        </View>
+        <View style={{ paddingHorizontal: 200 }} />
       </ScrollView>
     </View>
   );
@@ -139,30 +142,22 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     paddingHorizontal: 10,
   },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 16,
-  },
-  button: {
-    backgroundColor: "#4f992e",
-    padding: 15,
-    borderRadius: 15,
-    width: 100,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "white",
-    fontWeight: "bold",
+
+  mapContainer: {
+    borderWidth: 1,
+    borderColor: "#97B858",
+    borderRadius: 5,
+    marginBottom: 16,
+    overflow: "hidden",
+    height: "60%", // To round the corners of the map container
   },
   map: {
-    width: "100%",
     height: "100%",
+    width: "100%",
   },
 });
 
-export default AddInitDataComp;
+export default AddTitle;
 {
   /* <View
           style={{
@@ -194,3 +189,36 @@ export default AddInitDataComp;
 {
   /* <LocationPicker /> */
 }
+
+// const handleCreateProduct = async () => {
+//   try {
+//     const userData = await Auth.currentAuthenticatedUser();
+//     const userId = userData.attributes.sub;
+//     console.log("The userId is " + userId);
+//     const product = await DataStore.save(
+//       new Product({
+//         name,
+//         description: tempDescription, // Use the temporary description
+//         price: parseFloat(price),
+//         city: "default",
+//         images: imageUrls,
+//         userSub: userId,
+//       })
+//     );
+
+//     console.log("Product created:", product);
+
+//     // Create the product categories using DataStore.mutate
+//     for (const categoryId of categories) {
+//       const productCategory = await DataStore.save(
+//         new ProductCategories({
+//           categoryId,
+//           productId: product.id,
+//         })
+//       );
+//       console.log("Product category created:", productCategory);
+//     }
+//   } catch (error) {
+//     console.log("Error creating product:", error);
+//   }
+// };

@@ -15,6 +15,29 @@ module.exports = async function (env, argv) {
       });
     }
   });
+
+  // Add the resolve configuration here
+  config.resolve = {
+    alias: {
+      "react-native$": "react-native-web",
+      "../Utilities/Platform": "react-native-web/dist/exports/Platform",
+      "../../Utilities/Platform": "react-native-web/dist/exports/Platform",
+      "./Platform": "react-native-web/dist/exports/Platform",
+      // Additional aliases to resolve other module errors
+      "./RCTAlertManager": "react-native-web/dist/exports/Alert",
+      "../../Image/Image": "react-native-web/dist/exports/Image",
+      "../../StyleSheet/PlatformColorValueTypes":
+        "react-native-web/dist/exports/StyleSheet",
+      "./PlatformColorValueTypes": "react-native-web/dist/exports/StyleSheet",
+      "../Components/AccessibilityInfo/legacySendAccessibilityEvent":
+        "react-native-web/dist/exports/AccessibilityInfo",
+      "../Utilities/BackHandler": "react-native-web/dist/exports/render",
+      "./RCTNetworking": "identity-obj-proxy",
+      "./BaseViewConfig": "identity-obj-proxy",
+      // Add other aliases as needed based on the remaining errors
+    },
+  };
+
   return config;
 };
 

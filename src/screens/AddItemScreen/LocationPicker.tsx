@@ -1,12 +1,15 @@
 import { View, Text, StyleSheet, Dimensions } from "react-native";
-import React, { useState } from "react";
-import MapView, { Marker } from "react-native-maps";
+import React, { useState, useContext } from "react";
+
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import * as Location from "expo-location";
 const { height, width } = Dimensions.get("screen");
+import { TryContext } from "../../context/tryoutCont";
 
 const LocationPicker = () => {
-  const [selectedLocation, setSelectedLocation] = useState(null);
+  // const [selectedLocation, setSelectedLocation] = useState(null);
+  const { address, setAddress, selectedLocation, setSelectedLocation } =
+    useContext(TryContext);
 
   const geocodeAddressAsync = async (address) => {
     try {
@@ -24,10 +27,13 @@ const LocationPicker = () => {
 
   const handlePlaceSelect = async (data, details) => {
     try {
-      const address = details.description;
-      const location = await geocodeAddressAsync(address);
+      const addressPlace = details.description;
+      console.log("AddressPlace: ", addressPlace);
+      setAddress(addressPlace);
+      const location = await geocodeAddressAsync(addressPlace);
       if (location) {
         setSelectedLocation(location);
+        console.log("What a location", location);
       }
     } catch (error) {
       console.warn("Error fetching location details:", error);
@@ -50,42 +56,19 @@ const LocationPicker = () => {
         styles={{
           textInputContainer: styles.inputContainer,
           textInput: styles.input,
+          listView: styles.autocompleteListView,
         }}
       />
-      {/* <View style={styles.mapContainer}>
-        <MapView
-          style={styles.map}
-          initialRegion={
-            selectedLocation
-              ? {
-                  latitude: selectedLocation.lat,
-                  longitude: selectedLocation.lng,
-                  latitudeDelta: 0.0922,
-                  longitudeDelta: 0.0421,
-                }
-              : null
-          }
-        >
-          {selectedLocation && (
-            <Marker
-              coordinate={{
-                latitude: selectedLocation.lat,
-                longitude: selectedLocation.lng,
-              }}
-            />
-          )}
-        </MapView>
-      </View> */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    // padding: 16,
-    // width: width,
-    // height: "100%",
+    width: "100%",
+    height: "15%",
     backgroundColor: "white",
+    zIndex: 1,
   },
   label: {
     fontWeight: "bold",
@@ -95,26 +78,20 @@ const styles = StyleSheet.create({
   inputContainer: {
     borderWidth: 1,
     borderColor: "#97B858",
-    borderRadius: 8,
-    marginBottom: 10,
+    borderRadius: 5,
+    // marginBottom: 10,
     // paddingHorizontal: 10,
   },
   input: {
-    height: 40,
+    height: 35,
     color: "black", // Change the text color if needed
   },
-
-  mapContainer: {
-    flex: 1,
-    height: 300,
-    borderWidth: 1,
-    borderColor: "#97B858",
-    borderRadius: 8,
-    marginBottom: 16,
-    overflow: "hidden", // To round the corners of the map container
-  },
-  map: {
-    flex: 1,
+  autocompleteListView: {
+    position: "absolute",
+    top: 50, // Adjust this value based on your UI layout
+    zIndex: 1, // Set a higher zIndex value
+    width: "100%", // Ensure the dropdown covers the entire width
+    backgroundColor: "white", // Set the background color of the dropdown
   },
 });
 

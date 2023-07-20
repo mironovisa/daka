@@ -13,7 +13,6 @@ import { Amplify, Storage } from "aws-amplify";
 import awsconfig from "../../aws-exports";
 import { TryContext } from "../../context/tryoutCont";
 import ImagePickerModal from "./modal";
-import { fetchImage } from "./functions";
 import ImagePile from "./imagePile";
 import { useRoute } from "@react-navigation/native";
 import DraggableFlatList from "react-native-draggable-flatlist";
@@ -23,22 +22,23 @@ Amplify.configure(awsconfig);
 
 const { height, width } = Dimensions.get("screen");
 
-interface ImagePickerProps {
-  onNextPage: () => void;
-  onPrevPage: () => void;
-}
+// interface ImagePickerProps {
+//   onNextPage: () => void;
+//   onPrevPage: () => void;
+// }
+// {
+//   onNextPage,
+//   onPrevPage,
+//   props,
+// }: ImagePickerProps
 
-function ImagePickerExample({
-  onNextPage,
-  onPrevPage,
-  props,
-}: ImagePickerProps) {
+function ImagePickerExample() {
   const [modalVisible, setModalVisible] = useState(false);
   const [image, setImage] = useState([]);
   const [imageAsset, setImageAsset] = useState([]);
-  const { setImageUrls, categories } = useContext(TryContext);
+  const { setImageUrls, carData, imageUrls } = useContext(TryContext);
   const route = useRoute();
-  const { handleSetAllImagesGathered, setAllImagesGathered } = route.params;
+  const { setAllImagesGathered } = route.params;
   const deleteByValue = (value) => {
     setImage((oldValues) => {
       return oldValues.filter((img) => img !== value);
@@ -47,8 +47,24 @@ function ImagePickerExample({
     setImageAsset((oldAssets) => {
       return oldAssets.filter((asset) => asset.uri !== value);
     });
+    setImageUrls((oldAssets) => {
+      return oldAssets.filter((asset) => asset.uri !== value);
+    });
   };
 
+  useEffect(() => {
+    console.log(carData);
+  }, []);
+
+  const permissionResult = async () => {
+    const result = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const secondResult = await ImagePicker.requestCameraPermissionsAsync();
+    console.log("Media library access: ", result);
+    console.log("Camera access: ", secondResult);
+  };
+  useEffect(() => {
+    permissionResult();
+  }, []);
   useEffect(() => {
     if (imageAsset.length > 0) {
       setAllImagesGathered(true);
@@ -56,93 +72,51 @@ function ImagePickerExample({
   }, [imageAsset]);
 
   useEffect(() => {
-    console.log(imageAsset);
-  }, [imageAsset]);
-
-  const uploadFile = async (file) => {
-    const img = await fetchImage(file.uri);
-    return Storage.put(`my-image-filename${Math.random()}.jpg`, img, {
-      level: "public",
-      contentType: file.type,
-      progressCallback(uploadProgress) {
-        console.log(
-          "PROGRESS",
-          uploadProgress.loaded + "/" + uploadProgress.total
-        );
-      },
-    })
-      .then((res) => {
-        Storage.get(res.key)
-          .then((res) => {
-            console.log("Result", res);
-            const clearedUrl = res.split("?")[0];
-            setImageUrls((prevUrl) => [...prevUrl, clearedUrl]);
-            console.log(clearedUrl);
-          })
-          .catch((e) => {
-            console.log(e);
-          });
-      })
-      .catch((e) => console.log(e));
-  };
+    console.log(imageUrls);
+  }, [imageUrls]);
 
   const showModal = () => {
     setModalVisible(!modalVisible);
   };
 
-  const reorderImages = (data) => {
-    setImage(data);
-
-    const newImageAssets = data.map((item) => item.asset);
-    setImageAsset(newImageAssets);
-  };
-
-  const handlePickImage = async (mediaType) => {
-    showModal();
-
-    let result;
-    let quality = 1; // Default quality for Android
-
-    if (Platform.OS === "ios") {
-      quality = 0; // Set quality to 0 for iOS
-    }
-
-    if (mediaType === "camera") {
-      result = await ImagePicker.launchCameraAsync({
-        allowsMultipleSelection: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-    } else {
-      result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsMultipleSelection: true,
-        aspect: [4, 3],
-        selectionLimit: 5 - image.length, // Set the selection limit based on the remaining slots
-        quality: 0,
-      });
-    }
+  const handleTakePhoto = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: true,
+      aspect: [4, 3],
+      selectionLimit: 5 - image.length, // Set the selection limit based on the remaining slots
+      quality: 0,
+    });
+    console.log(result);
 
     if (!result.canceled) {
       const newImages = result.assets.map((asset) => asset.uri);
       setImage((prev) => [...prev, ...newImages]);
       setImageAsset((prev) => [...prev, ...result.assets]);
+      setImageUrls((prev) => [...prev, ...result.assets]);
+    }
+    showModal();
+  };
+
+  const handlePickImage = async (mediaType) => {
+    showModal();
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: true,
+      aspect: [4, 3],
+      selectionLimit: 5 - image.length, // Set the selection limit based on the remaining slots
+      quality: 0,
+    });
+
+    if (!result.canceled) {
+      const newImages = result.assets.map((asset) => asset.uri);
+      setImage((prev) => [...prev, ...newImages]);
+      setImageAsset((prev) => [...prev, ...result.assets]);
+      setImageUrls((prev) => [...prev, ...result.assets]);
     }
   };
 
-  const handleNextButton = async () => {
-    for (const asset of imageAsset) {
-      try {
-        await uploadFile(asset);
-      } catch (error) {
-        console.log("Error uploading file:", error);
-      }
-    }
-
-    onNextPage();
-  };
-
-  const isButtonDisabled = image.length <= 5;
   const shouldShowListFooter = imageAsset.length <= 4;
 
   return (
@@ -183,8 +157,9 @@ function ImagePickerExample({
         isVisible={modalVisible}
         onClose={() => setModalVisible(false)}
         onCameraPress={() => {
-          handlePickImage("camera");
-          setModalVisible(false);
+          handleTakePhoto();
+          // handlePickImage("camera");
+          // setModalVisible(false);
         }}
         onLibraryPress={() => {
           handlePickImage("library");
@@ -200,7 +175,6 @@ function ImagePickerExample({
           renderItem={({ item }) => (
             <ImagePile img={item.uri} deleteByValue={deleteByValue} />
           )}
-          onDragEnd={({ data }) => reorderImages(data)}
           style={styles.flatListView}
         />
       </View>
@@ -237,3 +211,42 @@ const styles = StyleSheet.create({
 });
 
 export default ImagePickerExample;
+
+// const handleNextButton = async () => {
+//   for (const asset of imageAsset) {
+//     try {
+//       await uploadFile(asset);
+//     } catch (error) {
+//       console.log("Error uploading file:", error);
+//     }
+//   }
+
+//   onNextPage();
+// };
+
+// const uploadFile = async (file) => {
+//   const img = await fetchImage(file.uri);
+//   return Storage.put(`my-image-filename${Math.random()}.jpg`, img, {
+//     level: "public",
+//     contentType: file.type,
+//     progressCallback(uploadProgress) {
+//       console.log(
+//         "PROGRESS",
+//         uploadProgress.loaded + "/" + uploadProgress.total
+//       );
+//     },
+//   })
+//     .then((res) => {
+//       Storage.get(res.key)
+//         .then((res) => {
+//           console.log("Result", res);
+//           const clearedUrl = res.split("?")[0];
+//           setImageUrls((prevUrl) => [...prevUrl, clearedUrl]);
+//           console.log(clearedUrl);
+//         })
+//         .catch((e) => {
+//           console.log(e);
+//         });
+//     })
+//     .catch((e) => console.log(e));
+// };
