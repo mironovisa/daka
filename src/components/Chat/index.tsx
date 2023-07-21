@@ -15,7 +15,7 @@ function ChatModal({ onClose }) {
 
   const handleSend = () => {
     // Logic to handle sending the inputted data to the chat
-    console.log("Sending message:", message);
+    console.log("Sending a message:", message);
     setMessage("");
   };
 
@@ -23,7 +23,7 @@ function ChatModal({ onClose }) {
     <View style={styles.modalContainer}>
       <View style={styles.modalContent}>
         {/* Chat content goes here */}
-        <Text>Hey!</Text>
+        {/* <Text>Hey!</Text> */}
       </View>
       <View style={styles.inputContainer}>
         <TextInput
