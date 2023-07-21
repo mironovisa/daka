@@ -33,16 +33,4 @@ type Product @model @auth(rules: [{ allow: public }]) {
   images: [String]
   userSub: String
   categories: [Category] @manyToMany(relationName: "ProductCategories")
-  
-}
-
-type Car {
-  id: String
-  model: 
-  brand: 
-
-}
-type Aparts
-{
-
 }
