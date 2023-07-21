@@ -70,8 +70,10 @@ function Example(props) {
               userLanguage
             );
 
+            console.log(item.message, translatedText);
+
             if (translatedText) {
-              message.text = translatedText;
+              message.message = translatedText;
             } else {
               console.log("Translation failed for message:", item.message);
               // Handle translation error
@@ -80,6 +82,8 @@ function Example(props) {
           return message;
         })
       );
+
+      console.log(fetchedMessages);
 
       // Sort messages by createdAt in ascending order
       const sortedMessages = fetchedMessages.sort(
@@ -124,8 +128,8 @@ function Example(props) {
       const translatedText = translated_text[toLanguage];
       const originalText = original_text;
 
-      console.log("Translated Text:", translatedText);
-      console.log("Original Text:", originalText);
+      // console.log("Translated Text:", translatedText);
+      // console.log("Original Text:", originalText);
 
       return translatedText;
     } catch (error) {

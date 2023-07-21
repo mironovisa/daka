@@ -36,7 +36,7 @@ const categoriesData: { categories: Category[] } = {
       name: "Real Estate",
       url: "/real-estate",
       subcategories: [
-        { id: "ca96403d-7a0c-4cad-8c33-ade92858a46d", name: "Apartments" },
+        { id: "ca96403d-7a0c-4cad-8c33-ade92858a46d", name: "Apartments" }, //square m2, rental period
         { id: "d6f00130-f9f4-46b4-ae8e-ee3f7ac7ba36", name: "Rooms" },
         { id: "0c7ffa04-1045-44bc-b0bb-430061fe7b54", name: "Private Houses" },
         { id: "452fb733-f07f-41da-87da-323f985daf0c", name: "Garages" },
@@ -49,7 +49,7 @@ const categoriesData: { categories: Category[] } = {
       name: "Jobs",
       url: "/jobs",
       subcategories: [
-        { id: "c0e98563-fb84-43ae-886a-f2f89ac995c3", name: "Job Vacancies" },
+        { id: "c0e98563-fb84-43ae-886a-f2f89ac995c3", name: "Job Vacancies" }, //requirements
         { id: "a12743a3-f3ee-4b2e-9b80-bae8b9410356", name: "Resumes" }
       ]
     },
