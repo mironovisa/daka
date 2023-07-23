@@ -34,3 +34,4 @@ type Product @model @auth(rules: [{ allow: public }]) {
   userSub: String
   categories: [Category] @manyToMany(relationName: "ProductCategories")
 }
+
